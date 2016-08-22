@@ -142,7 +142,6 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         r2.setEndY(j*30+36);
                         //r.getStrokeDashArray().addAll(2d);
                         r2.setStroke(Color.LAWNGREEN);
-                        r2.setStroke(Color.LAWNGREEN);
                         AIManager.results.getChildren().add(r2);
                         double dep_time_in_gui = rec_Dep(ac_array.get(j).getFlight(0).getDeptimeRatio(),j);
                         double arr_time_in_gui = rec_Dep(ac_array.get(j).getFlight(0).getArrtimeRatio(),j);
