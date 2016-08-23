@@ -34,9 +34,6 @@ public class Flight{
         double minutes_100;
         
         deptime = getDeptime();
-        if (deptime < 100){
-            deptime = deptime+2400;
-        }
         minutes = deptime % 100;
         hours = deptime - minutes;
         minutes_100 = (minutes / 60) * 100;
@@ -62,9 +59,13 @@ public class Flight{
         double minutes_100;
         deptime = getDeptime();
         arrtime = getArrtime();
-        if (deptime < 100){
-            arrtime = arrtime+2400;
+        
+        // for flights with minus duration departing after 00:00 and arriving //
+        if(getArrtime()-getDeptime()<0){
+            arrtime = arrtime + 2400;
         }
+        //**//
+        
         minutes = arrtime % 100;
         hours = arrtime - minutes;
         minutes_100 = (minutes / 60) * 100;
@@ -97,6 +98,8 @@ public class Flight{
             duration_100 = hours + minutes_100;
             return duration_100;
         }
+
+        
         minutes = duration % 100;
         hours = duration - minutes;
         minutes_100 = (minutes / 60) * 100;
