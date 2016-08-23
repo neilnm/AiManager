@@ -79,6 +79,4 @@ public class Aircraft{
                                           arr_station,arr_time));
     }
     
-    
-    
 }

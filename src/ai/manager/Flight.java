@@ -25,7 +25,24 @@ public class Flight{
     public double getDeptime(){
         return dep_time;
     }
-    //1425cav519
+    
+    public String getArrstation(){
+        return arr_station;
+    }
+    
+    public double getArrtime(){
+        return arr_time;
+    }
+    
+    public double getDuration(){
+        //For negative durations example: 23:00dep 01:00 arrival
+        if(getArrtime()<getDeptime()){
+            return (getArrtime()+2400) - getDeptime();
+        }
+        return getArrtime() - getDeptime();
+    }
+    
+    //Method to return minutes in % ratio. Example: 30 minutes = 50; 45 minutes = 75.
     public double getDeptimeRatio(){
         double deptime;
         double deptime_100;
@@ -38,18 +55,10 @@ public class Flight{
         hours = deptime - minutes;
         minutes_100 = (minutes / 60) * 100;
         deptime_100 = hours + minutes_100;
-        //System.out.println("Dep100: "+deptime_100);
         return deptime_100;
     }
     
-    public String getArrstation(){
-        return arr_station;
-    }
-    
-    public double getArrtime(){
-        return arr_time;
-    }
-    
+    //Method to return minutes in % ratio. Example: 30 minutes = 50; 45 minutes = 75.
     public double getArrtimeRatio(){
         double arrtime;
         double deptime;
@@ -64,23 +73,16 @@ public class Flight{
         if(getArrtime()-getDeptime()<0){
             arrtime = arrtime + 2400;
         }
-        //**//
         
         minutes = arrtime % 100;
         hours = arrtime - minutes;
         minutes_100 = (minutes / 60) * 100;
         arrtime_100 = hours + minutes_100;
-        //System.out.println("Dep100: "+deptime_100);
         return arrtime_100;
     }
     
-    public double getDuration(){
-        if(getArrtime()<getDeptime()){
-            return (getArrtime()+2400) - getDeptime();
-        }
-        return getArrtime() - getDeptime();
-    }
-    
+    //****CHECK IF REALLY NEEDED****//
+    //Method to return minutes in % ratio. Example: 30 minutes = 50; 45 minutes = 75.
     public double getDurationRatio(){
         double duration;
         double duration_100;
@@ -88,6 +90,8 @@ public class Flight{
         double minutes;
         double minutes_100;
         duration = getArrtime()-getDeptime();
+        
+        //For Minutes more than 60 minutes
         if(getArrtime()-getDeptime()<=100 && getArrtime()-getDeptime()>60){
             duration = getArrtime()-getDeptime()-40;
         }
@@ -98,8 +102,6 @@ public class Flight{
             duration_100 = hours + minutes_100;
             return duration_100;
         }
-
-        
         minutes = duration % 100;
         hours = duration - minutes;
         minutes_100 = (minutes / 60) * 100;
@@ -112,8 +114,7 @@ public class Flight{
         return duration_100;
     }
     
-    
-    
+    //TO STRING
     @Override
     public String toString(){
         String dep_time_S = String.valueOf(dep_time);
