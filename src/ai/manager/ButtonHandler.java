@@ -23,18 +23,28 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
     
     //variables
     Scanner reader;
-    ArrayList<String> lineList = new ArrayList<>();
-    ArrayList<String[]> commalist = new ArrayList<>();
+
     
     @Override
     public void handle(ActionEvent btn_load){
+        ArrayList<String> lineList = new ArrayList<>();
+        ArrayList<String[]> commalist = new ArrayList<>();
         
         if(btn_load.getSource().equals(AIManager.btn_reset)){
             AIManager.results.getChildren().clear();
-            AIManager.ac_count_txt.setText("Aircraft Loaded: 0");
+            AIManager.ac_array.clear();
+            AIManager.rec_array.clear();
+            AIManager.ac_count_txt.setText("Aircraft Loaded: "+AIManager.ac_array.size());
+            System.out.println("neil array size :"+AIManager.ac_array.size());
+            System.out.println("neil linelist size :"+lineList.size());
+            System.out.println("neil comma size :"+commalist.size());
+            
         }
         
         if(btn_load.getSource().equals(AIManager.btn_load)){
+            System.out.println("neil array size :"+AIManager.ac_array.size());
+            System.out.println("neil linelist size :"+lineList.size());
+            System.out.println("neil comma size :"+commalist.size());
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Choose Flight Plan");
             File selectedfile = fileChooser.showOpenDialog(null);
@@ -89,7 +99,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 System.out.println(e);
             }
             finally{
-                AIManager.ac_count_txt.setText("Aircraft Loaded: "+String.valueOf(AIManager.ac_array.size()));
+                AIManager.ac_count_txt.setText("Aircraft Loaded: "+AIManager.ac_array.size());
                 
                 //Drawing H lines and Printing Aircraft Labels
                 for (int i=0; i < ac_array.size(); i++) {
@@ -109,12 +119,12 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     AIManager.results.getChildren().add(r);
                 }
 
-                for(int i=1; i<=48; i++){
+                for(int i=0; i<=48; i++){
                     //Rectangle r = new Rectangle(30*i,1,1,500);
                     Line r = new Line();
-                    r.setStartX(30*i+100);
+                    r.setStartX(30*i+130);
                     r.setStartY(0);
-                    r.setEndX(30*i+100);
+                    r.setEndX(30*i+130);
                     r.setEndY(AIManager.ac_array.size()*30+18);
                     //r.getStrokeDashArray().addAll(2d);
                     r.setStroke(Color.LIGHTSLATEGREY);
@@ -122,7 +132,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     if(i > 24){
                         l.setText(String.valueOf(i-24));
                     }
-                    l.setLayoutX((30*i)+104);
+                    l.setLayoutX((30*i)+134);
                     l.setLayoutY(1);
                     l.setTextFill(Color.WHITE);
                     results.getChildren().add(r);
@@ -133,6 +143,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 //Drawing Flights
                     for(int j = 0; j < ac_array.size(); j++){
                     //for(int j = 0; j < 3; j++){
+                        Label neil = new Label();
                         Line r2 = new Line();
                         Label depl = new Label();
                         Label arrl = new Label();
@@ -149,13 +160,13 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         
                         depl.setText(ac_array.get(j).getFlight(0).getDepstation());
                         arrl.setText(ac_array.get(j).getFlight(0).getArrstation());
-                        depl.setLayoutX(dep_time_in_gui-30);
-                        arrl.setLayoutX(arr_time_in_gui+5);
+                        depl.setLayoutX(dep_time_in_gui);
+                        arrl.setLayoutX(arr_time_in_gui+35);
                         depl.setLayoutY(j*30+26);
                         arrl.setLayoutY(j*30+26);
                         
                         //Rectangle r = new Rectangle((rec_Dep(ac_array.get(12).getFlight(0).getDeptimeRatio(),j)),j*30+26,(ac_array.get(12).getFlight(0).getDurationRatio())/3,15);
-                        Rectangle r = new Rectangle(dep_time_in_gui,j*30+26,duration_in_gui,15);
+                        Rectangle r = new Rectangle(dep_time_in_gui+30,j*30+26,duration_in_gui,15);
                         //System.out.println("AC:"+ac_array.get(j).getAcnum()+ac_array.get(j).getFlightnum()+"rec position: "+r.getX());
                         //System.out.println("AC:"+ac_array.get(12).getFlightnum());
                         //System.out.println("Dep:"+dep_time_in_gui);
@@ -168,6 +179,12 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         if((j%2>0)){
                             r.setFill(Color.BLUEVIOLET);
                         }
+                        
+                        /*//Position test
+                        neil.setText("neil");
+                        neil.setLayoutX(130);
+                        neil.setLayoutY(56); */
+                       
                         AIManager.results.getChildren().addAll(r,depl,arrl);
 
                     }
@@ -184,7 +201,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
     }
         public double rec_Dep(double time,int pos){
             //if((ac_array.get(pos).getDepTime(0)/100)*30+100<130){
-            if(time/100*30+100<130){
+            //Divided by 100 because 134 time is 1.34 hours * 30 (30 is spacing per hour) + 130 (130 is 100 for margin spacing and 30 for 1 hour spacing because starting at 00:00)
+            if(time/100*30+130<130){
+                System.out.println("neil:"+time);
                 return 130.0;
             }
             else{
