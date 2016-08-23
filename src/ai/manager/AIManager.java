@@ -24,6 +24,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -70,6 +71,7 @@ public class AIManager extends Application {
         
         hbox3.setMinSize(vbox1.getWidth(), 20);
         hbox3.setStyle("-fx-background-color:#003366");
+        
         
         //Panes
         BorderPane main_pane = new BorderPane();
@@ -154,11 +156,15 @@ public class AIManager extends Application {
         //Setting Scene
         ScrollPane sp = new ScrollPane();
         sp.setContent(results);
+        sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        Tooltip hello = new Tooltip();
+        hello.setText("I love Julesy");
+        sp.setTooltip(hello);
         
         main_pane.setTop(vbox1);
         main_pane.setCenter(sp);
         
-        Scene scene = new Scene(main_pane,1220,800);
+        Scene scene = new Scene(main_pane,1625,800);
         
         primaryStage.setTitle("AI Manager by Neil Mancini");
         primaryStage.setScene(scene);
