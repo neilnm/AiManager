@@ -82,16 +82,22 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         //Adding Flights to Aircraft (Dep Station, Dep Time, Arr Station, Arr Time)
                         try{
                             int position = 0;
+                            double starttime = 0;
                             for(int j = 0; j < num_of_flights; j++){
                                 if(j == 0){
                                     ac.AddFlight(commalist.get(i)[commalist.get(i).length-1].substring(0,4), 
                                     Double.parseDouble(commalist.get(i)[5].substring(0,5).replaceAll(":","")), 
                                     commalist.get(i)[10], 
                                     Double.parseDouble(commalist.get(i)[6].substring(0,5).replaceAll(":","")));
+                                    starttime = Double.parseDouble(commalist.get(i)[5].substring(0,5).replaceAll(":",""));
                                 }
                                 else{
+                                    double deptime = Double.parseDouble(commalist.get(i)[11+position].substring(0,5).replaceAll(":",""));
+                                    if(deptime < starttime){
+                                        deptime = deptime + 2400;
+                                    }
                                     ac.AddFlight(commalist.get(i)[10+position], 
-                                    Double.parseDouble(commalist.get(i)[11+position].substring(0,5).replaceAll(":","")), 
+                                    deptime, 
                                     commalist.get(i)[16+position].substring(0,4), 
                                     Double.parseDouble(commalist.get(i)[12+position].substring(0,5).replaceAll(":","")));
                                     
