@@ -93,6 +93,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                                 }
                                 else{
                                     double deptime = Double.parseDouble(commalist.get(i)[11+position].substring(0,5).replaceAll(":",""));
+                                    //for checking leg order
                                     if(deptime < starttime){
                                         deptime = deptime + 2400;
                                     }
