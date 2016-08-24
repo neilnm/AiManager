@@ -125,9 +125,9 @@ public class AIManager extends Application {
         ScrollPane sp = new ScrollPane();
         sp.setContent(results);
         sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        Tooltip hello = new Tooltip();
+        /*Tooltip hello = new Tooltip();
         hello.setText("I love Julesy");
-        sp.setTooltip(hello);
+        sp.setTooltip(hello);*/
         
         main_pane.setTop(vbox1);
         main_pane.setCenter(sp);

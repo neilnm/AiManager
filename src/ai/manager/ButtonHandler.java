@@ -14,6 +14,7 @@ import java.util.Scanner;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -65,26 +66,48 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
 
                         //Splitting by ","
                         commalist.add(lineList.get(i).split(","));
+                    }
+                }
+                //checking if 24 hour aircraft and creating Aircrafts and Flights
+                for(int i = 0; i < commalist.size(); i++){
+                    if(commalist.get(i)[3].equals("24")){
 
-                        //checking if 24 hour aircraft and creating Aircrafts and Flights
-                        if(commalist.get(commalist.size()-1)[3].equals("24")){
-                            
-                            //Creating new Aircraft
-                            Aircraft ac = new Aircraft(Integer.parseInt(commalist.get(commalist.size()-1)[0].substring(3)),
-                                                       commalist.get(commalist.size()-1)[1]);
-                            
-                            //Adding Flights to Aircraft
-                            try{
-                                ac.AddFlight(commalist.get(commalist.size()-1)[commalist.get(commalist.size()-1).length-1].substring(0,4), 
-                                Double.parseDouble(commalist.get(commalist.size()-1)[5].substring(0,5).replaceAll(":","")), 
-                                commalist.get(commalist.size()-1)[10], 
-                                Double.parseDouble(commalist.get(commalist.size()-1)[6].substring(0,5).replaceAll(":","")));
+                        //Creating new Aircraft
+                        Aircraft ac = new Aircraft(Integer.parseInt(commalist.get(i)[0].substring(3)),
+                                                   commalist.get(i)[1]);
+
+                        int num_of_flights = commalist.get(i).length / 6;
+                        //System.out.println(num_of_flights);
+                        
+                        //Adding Flights to Aircraft (Dep Station, Dep Time, Arr Station, Arr Time)
+                        try{
+                            int position = 0;
+                            for(int j = 0; j < num_of_flights; j++){
+                                if(j == 0){
+                                    ac.AddFlight(commalist.get(i)[commalist.get(i).length-1].substring(0,4), 
+                                    Double.parseDouble(commalist.get(i)[5].substring(0,5).replaceAll(":","")), 
+                                    commalist.get(i)[10], 
+                                    Double.parseDouble(commalist.get(i)[6].substring(0,5).replaceAll(":","")));
+                                }
+                                else{
+                                    ac.AddFlight(commalist.get(i)[10+position], 
+                                    Double.parseDouble(commalist.get(i)[11+position].substring(0,5).replaceAll(":","")), 
+                                    commalist.get(i)[16+position].substring(0,4), 
+                                    Double.parseDouble(commalist.get(i)[12+position].substring(0,5).replaceAll(":","")));
+                                    
+                                    /*System.out.println(commalist.get(i)[10+position]);
+                                    System.out.println(Double.parseDouble(commalist.get(i)[11+position].substring(0,5).replaceAll(":","")));
+                                    System.out.println(commalist.get(i)[16+position]);
+                                    System.out.println(Double.parseDouble(commalist.get(i)[12+position].substring(0,5).replaceAll(":","")));*/
+                                    position = position+6;
+                                }
                             }
-                            catch(java.lang.NumberFormatException | java.lang.StringIndexOutOfBoundsException e){
-                                System.out.println("test: "+i+" "+commalist.get(commalist.size()-1)[0].substring(3)+" "+commalist.get(commalist.size()-1)[1]);
-                            }
-                            AIManager.ac_array.add(ac);
                         }
+                        catch(java.lang.NumberFormatException | java.lang.StringIndexOutOfBoundsException e){
+                            System.out.println("test: "+i+" "+commalist.get(commalist.size()-1)[0].substring(3)+" "+commalist.get(commalist.size()-1)[1]);
+                        }
+                        AIManager.ac_array.add(ac);
+                        
                     }
                 }
             }
@@ -162,49 +185,57 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     conn_line.setEndY(j*ac_line_spacing+34);
                     conn_line.setStroke(Color.LAWNGREEN);
                     
-                    //VARIABLES
-                    double dep_time_in_gui = timeTopixel(ac_array.get(j).getFlight(0).getDeptimeRatio());
-                    double arr_time_in_gui = timeTopixel(ac_array.get(j).getFlight(0).getArrtimeRatio());
-                    double duration_in_gui = arr_time_in_gui - dep_time_in_gui;
+                    
+                    for(int i = 0; i < ac_array.get(j).flight_array.size(); i++){
+                        System.out.println(ac_array.get(j).getFlightnum()+"Num of flights :"+ac_array.get(j).getFlight(i));
+                        
+                        //VARIABLES
+                        double dep_time_in_gui = timeTopixel(ac_array.get(j).getFlight(i).getDeptimeRatio());
+                        double arr_time_in_gui = timeTopixel(ac_array.get(j).getFlight(i).getArrtimeRatio());
+                        double duration_in_gui = arr_time_in_gui - dep_time_in_gui;
 
-                    //Drawing Aircrafts
-                    //REC(X START, Y START, WIDTH, HEIGHT)
-                    Rectangle leg_rec = new Rectangle(dep_time_in_gui+30,j*30+26,duration_in_gui,15);
-                    
-                    //Alternating Leg Colors
-                    leg_rec.setFill(Color.BLUE);
-                    if((j%2>0)){
-                        leg_rec.setFill(Color.BLUEVIOLET);
+                        //Drawing Aircrafts
+                        //REC(X START, Y START, WIDTH, HEIGHT)
+                        Rectangle leg_rec = new Rectangle(dep_time_in_gui+30,j*30+26,duration_in_gui,15);
+                        Tooltip stations = new Tooltip();
+                        stations.setText(ac_array.get(j).getFlight(i).getDepstation()+"-"+ac_array.get(j).getFlight(i).getArrstation()+"\n"+
+                                         ac_array.get(j).getFlight(i).getDeptime()+" - "+ac_array.get(j).getFlight(i).getArrtime());
+                        Tooltip.install(leg_rec, stations);
+                        //Alternating Leg Colors
+                        leg_rec.setFill(Color.BLUE);
+                        if((j%2>0)){
+                            leg_rec.setFill(Color.BLUEVIOLET);
+                        }
+                        //Border Radius does not seem to work
+                        //r.setStyle("-fx-border-radius: 10 10 10 10");
+
+                        //Station Labels
+                        Label depl = new Label();
+                        Label arrl = new Label();
+                        depl.setText(ac_array.get(j).getFlight(i).getDepstation());
+                        arrl.setText(ac_array.get(j).getFlight(i).getArrstation());
+                        depl.setLayoutX(dep_time_in_gui);
+                        arrl.setLayoutX(arr_time_in_gui+35);
+                        depl.setLayoutY(j*ac_line_spacing+26);
+                        arrl.setLayoutY(j*ac_line_spacing+26);
+                        
+
+                        //Adding to Rectangle Array and to results pane
+                        AIManager.rec_array.add(leg_rec);
+                        AIManager.results.getChildren().addAll(leg_rec);
                     }
-                    //Border Radius does not seem to work
-                    //r.setStyle("-fx-border-radius: 10 10 10 10");
-                    
-                    //Station Labels
-                    Label depl = new Label();
-                    Label arrl = new Label();
-                    depl.setText(ac_array.get(j).getFlight(0).getDepstation());
-                    arrl.setText(ac_array.get(j).getFlight(0).getArrstation());
-                    depl.setLayoutX(dep_time_in_gui);
-                    arrl.setLayoutX(arr_time_in_gui+35);
-                    depl.setLayoutY(j*ac_line_spacing+26);
-                    arrl.setLayoutY(j*ac_line_spacing+26);
-                    
-                    //Adding to Rectangle Array and to results pane
-                    AIManager.rec_array.add(leg_rec);
-                    AIManager.results.getChildren().addAll(conn_line,leg_rec,depl,arrl);
-                    
-                    ////////////PRINT TESTS\\\\\\\\\\\\
-                    
-                    /*//Position test
-                    neil.setText("neil");
-                    neil.setLayoutX(130);
-                    neil.setLayoutY(56); */
-                    
-                    //System.out.println("AC:"+ac_array.get(j).getAcnum()+ac_array.get(j).getFlightnum()+"rec position: "+r.getX());
-                    //System.out.println("AC:"+ac_array.get(12).getFlightnum());
-                    //System.out.println("Dep:"+dep_time_in_gui);
-                    //System.out.println("Arr:"+arr_time_in_gui);
-                    //System.out.println("Duration:"+arr_time_in_gui);
+                        ////////////PRINT TESTS\\\\\\\\\\\\
+
+                        /*//Position test
+                        neil.setText("neil");
+                        neil.setLayoutX(130);
+                        neil.setLayoutY(56); */
+
+                        //System.out.println("AC:"+ac_array.get(j).getAcnum()+ac_array.get(j).getFlightnum()+"rec position: "+r.getX());
+                        //System.out.println("AC:"+ac_array.get(12).getFlightnum());
+                        //System.out.println("Dep:"+dep_time_in_gui);
+                        //System.out.println("Arr:"+arr_time_in_gui);
+                        //System.out.println("Duration:"+arr_time_in_gui);
                 }
             }   
         }
