@@ -35,13 +35,17 @@ public class AIManager extends Application {
     
     //Static Variables
     static TextField load_text = new TextField();
+    static TextField down_text = new TextField();
     static String filePathInput = new String();
     static List <Aircraft> ac_array = new ArrayList<>();
+    static List <Aircraft> search_array = new ArrayList<>();
     static List <Rectangle> rec_array = new ArrayList<>();
     static Label ac_count_txt = new Label();
     static Pane results = new Pane();
     static ToggleButton btn_load = new ToggleButton("");
     static Button btn_reset = new Button("reset");
+    static Button btn_search = new Button("SEARCH");
+    
     static Pane hbox3 = new Pane();
     
     @Override
@@ -85,7 +89,8 @@ public class AIManager extends Application {
         
         btn_reset.setOnAction(new ButtonHandler());
         
-        Button btn_search = new Button("SEARCH");
+        btn_search.setOnAction(new ButtonHandler());
+
         
         //TXT Fields
         load_text.setMinHeight(25);
@@ -97,7 +102,7 @@ public class AIManager extends Application {
         airline_text.setText("Airline Code");
         TextField ac_text = new TextField();
         ac_text.setText("Aircraft Number");
-        TextField down_text = new TextField();
+        
         down_text.setText("4");
         down_text.setMaxWidth(30);
         

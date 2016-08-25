@@ -6,6 +6,7 @@
 package ai.manager;
 
 import static ai.manager.AIManager.ac_array;
+import static ai.manager.AIManager.search_array;
 import static ai.manager.AIManager.results;
 import static ai.manager.AIManager.hbox3;
 import java.io.File;
@@ -42,6 +43,18 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             AIManager.ac_count_txt.setText("Aircraft Loaded: "+AIManager.ac_array.size());
             
         }
+        
+        
+        //SEARCH BUTTON
+        if(btn_load.getSource().equals(AIManager.btn_search)){
+            //Clearing Arrays and Result Pane
+            AIManager.results.getChildren().clear();
+            
+            //Reloading ac count text
+            AIManager.ac_count_txt.setText("Aircraft Loaded: "+AIManager.ac_array.size());
+            
+        }
+        
         
         //LOAD BUTTON
         if(btn_load.getSource().equals(AIManager.btn_load)){
@@ -184,6 +197,8 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
 
                 //Drawing Flights + CONNECTION LINE + STATION LABELS
                 for(int j = 0; j < ac_array.size(); j++){
+                    
+                    /*Old Connection Line
                     //CONNECTION LINE
                     Line conn_line = new Line();
                     conn_line.setStartX(left_margin);
@@ -191,7 +206,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     conn_line.setEndX(2000);
                     conn_line.setEndY(j*ac_line_spacing+34);
                     conn_line.setStroke(Color.LAWNGREEN);
-                    
+                    */
                     
                     for(int i = 0; i < ac_array.get(j).flight_array.size(); i++){
                         System.out.println(ac_array.get(j).getFlightnum()+"Num of flights :"+ac_array.get(j).getFlight(i));
@@ -200,6 +215,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         double dep_time_in_gui = timeTopixel(ac_array.get(j).getFlight(i).getDeptimeRatio());
                         double arr_time_in_gui = timeTopixel(ac_array.get(j).getFlight(i).getArrtimeRatio());
                         double duration_in_gui = arr_time_in_gui - dep_time_in_gui;
+                        Line conn_line = new Line();
 
                         //Drawing Aircrafts
                         //REC(X START, Y START, WIDTH, HEIGHT)
@@ -226,10 +242,29 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         depl.setLayoutY(j*ac_line_spacing+26);
                         arrl.setLayoutY(j*ac_line_spacing+26);
                         
+                        //Connection Lines
+                        
+                        if(i > 0){
+                            double ground_time = ac_array.get(j).getFlight(i).getDeptimeRatio() - ac_array.get(j).getFlight(i-1).getArrtimeRatio();
+                            System.out.println(ground_time);
+                            if(ground_time >= Integer.parseInt(AIManager.down_text.getText())*100){
+                                conn_line.setStartX(timeTopixel(ac_array.get(j).getFlight(i-1).getArrtimeRatio())+31.5);
+                                conn_line.setStartY(j*ac_line_spacing+34);
+                                conn_line.setEndX(timeTopixel(ac_array.get(j).getFlight(i).getDeptimeRatio())+30);
+                                conn_line.setEndY(j*ac_line_spacing+34);
+                                conn_line.setStroke(Color.RED);
+                                conn_line.setStrokeWidth(2.5);
+                                
+                            }
+
+                        }
+                        
+                        
+                        
 
                         //Adding to Rectangle Array and to results pane
                         AIManager.rec_array.add(leg_rec);
-                        AIManager.results.getChildren().addAll(leg_rec);
+                        AIManager.results.getChildren().addAll(conn_line,leg_rec);
                     }
                         ////////////PRINT TESTS\\\\\\\\\\\\
 
