@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -221,8 +222,14 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         //REC(X START, Y START, WIDTH, HEIGHT)
                         Rectangle leg_rec = new Rectangle(dep_time_in_gui+30,j*30+26,duration_in_gui,15);
                         Tooltip stations = new Tooltip();
-                        stations.setText(ac_array.get(j).getFlight(i).getDepstation()+"-"+ac_array.get(j).getFlight(i).getArrstation()+"\n"+
+                        stations.setText(ac_array.get(j).getFlight(i).getDepstation()+" - "+ac_array.get(j).getFlight(i).getArrstation()+"\n"+
                                          ac_array.get(j).getFlight(i).getDeptime()+" - "+ac_array.get(j).getFlight(i).getArrtime());
+                        if (ac_array.get(j).getFlight(i).getDeptime() >= 2400){
+                            stations.setText(ac_array.get(j).getFlight(i).getDepstation()+"-"+ac_array.get(j).getFlight(i).getArrstation()+"\n"+
+                            (ac_array.get(j).getFlight(i).getDeptime()-2400)+" - "+ac_array.get(j).getFlight(i).getArrtime());
+                        }
+                        Font font = new Font("Verdana",20);
+                        stations.setFont(font);
                         Tooltip.install(leg_rec, stations);
                         //Alternating Leg Colors
                         leg_rec.setFill(Color.BLUE);
@@ -263,7 +270,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         
 
                         //Adding to Rectangle Array and to results pane
-                        AIManager.rec_array.add(leg_rec);
+                        //AIManager.rec_array.add(leg_rec);
                         AIManager.results.getChildren().addAll(conn_line,leg_rec);
                     }
                         ////////////PRINT TESTS\\\\\\\\\\\\
