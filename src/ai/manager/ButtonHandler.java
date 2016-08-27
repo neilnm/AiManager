@@ -115,11 +115,6 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                                     deptime, 
                                     commalist.get(i)[16+position].substring(0,4), 
                                     Double.parseDouble(commalist.get(i)[12+position].substring(0,5).replaceAll(":","")));
-                                    
-                                    /*System.out.println(commalist.get(i)[10+position]);
-                                    System.out.println(Double.parseDouble(commalist.get(i)[11+position].substring(0,5).replaceAll(":","")));
-                                    System.out.println(commalist.get(i)[16+position]);
-                                    System.out.println(Double.parseDouble(commalist.get(i)[12+position].substring(0,5).replaceAll(":","")));*/
                                     position = position+6;
                                 }
                             }
@@ -188,19 +183,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 //Drawing Flights + CONNECTION LINE + STATION LABELS
                 for(int j = 0; j < ac_array.size(); j++){
                     
-                    /*Old Connection Line
-                    //CONNECTION LINE
-                    Line conn_line = new Line();
-                    conn_line.setStartX(left_margin);
-                    conn_line.setStartY(j*ac_line_spacing+34);
-                    conn_line.setEndX(2000);
-                    conn_line.setEndY(j*ac_line_spacing+34);
-                    conn_line.setStroke(Color.LAWNGREEN);
-                    */
-                    
                     for(int i = 0; i < ac_array.get(j).flight_array.size(); i++){
-                        System.out.println(ac_array.get(j).getFlightnum()+"Num of flights :"+ac_array.get(j).getFlight(i));
-                        
                         //VARIABLES
                         double dep_time_in_gui = timeTopixel(ac_array.get(j).getFlight(i).getDeptimeRatio());
                         double arr_time_in_gui = timeTopixel(ac_array.get(j).getFlight(i).getArrtimeRatio());
@@ -239,10 +222,8 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         arrl.setLayoutY(j*ac_line_spacing+26);
                         
                         //Connection Lines
-                        
                         if(i > 0){
                             double ground_time = ac_array.get(j).getFlight(i).getDeptimeRatio() - ac_array.get(j).getFlight(i-1).getArrtimeRatio();
-                            System.out.println(ground_time);
                             if(ground_time >= Integer.parseInt(AIManager.down_text.getText())*100){
                                 conn_line.setStartX(timeTopixel(ac_array.get(j).getFlight(i-1).getArrtimeRatio())+31.5);
                                 conn_line.setStartY(j*ac_line_spacing+34);
@@ -254,10 +235,6 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                             }
 
                         }
-                        
-                        
-                        
-
                         //Adding to Rectangle Array and to results pane
                         //AIManager.rec_array.add(leg_rec);
                         AIManager.results.getChildren().addAll(conn_line,leg_rec);
