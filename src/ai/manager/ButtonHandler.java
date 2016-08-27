@@ -8,7 +8,7 @@ package ai.manager;
 import static ai.manager.AIManager.ac_array;
 import static ai.manager.AIManager.search_array;
 import static ai.manager.AIManager.results;
-import static ai.manager.AIManager.hbox3;
+import static ai.manager.AIManager.sp;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -181,21 +181,10 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     v_lines.setEndY(AIManager.ac_array.size()*hour_spacing+top_margin);
                     v_lines.setStroke(Color.LIGHTSLATEGREY);
                     
-                    //Hour Labels
-                    Label hous_label = new Label(String.valueOf(i));
-                    if(i > 24){
-                        hous_label.setText(String.valueOf(i-24));
-                    }
-                    hous_label.setLayoutX((30*i)+134);
-                    hous_label.setLayoutY(1);
-                    hous_label.setTextFill(Color.WHITE);
-                    
-                    //ADDING TO PANES
+                    //ADDING TO PANE
                     results.getChildren().add(v_lines);
-                    hbox3.getChildren().add(hous_label);
                 }
-
-
+                
                 //Drawing Flights + CONNECTION LINE + STATION LABELS
                 for(int j = 0; j < ac_array.size(); j++){
                     
@@ -273,18 +262,36 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         //AIManager.rec_array.add(leg_rec);
                         AIManager.results.getChildren().addAll(conn_line,leg_rec);
                     }
-                        ////////////PRINT TESTS\\\\\\\\\\\\
-
-                        /*//Position test
-                        neil.setText("neil");
-                        neil.setLayoutX(130);
-                        neil.setLayoutY(56); */
-
-                        //System.out.println("AC:"+ac_array.get(j).getAcnum()+ac_array.get(j).getFlightnum()+"rec position: "+r.getX());
-                        //System.out.println("AC:"+ac_array.get(12).getFlightnum());
-                        //System.out.println("Dep:"+dep_time_in_gui);
-                        //System.out.println("Arr:"+arr_time_in_gui);
-                        //System.out.println("Duration:"+arr_time_in_gui);
+                }
+                
+                //Rectangle for Hours header
+                Rectangle hours_rec = new Rectangle(0,0,2000,17);
+                hours_rec.setFill(Color.web("#003366"));
+                hours_rec.setStroke(Color.web("#003366"));
+                results.getChildren().add(hours_rec);
+                
+                //Loops for hours header
+                for(int i=0; i<=48; i++){
+                    
+                    //Hour Labels
+                    Label hours_label = new Label(String.valueOf(i));
+                    if(i > 24){
+                        hours_label.setText(String.valueOf(i-24));
+                    }
+                    hours_label.setLayoutX((30*i)+127);
+                    hours_label.setLayoutY(1);
+                    hours_label.setTextFill(Color.WHITE);
+                    
+                    sp.vvalueProperty().addListener( (observable, oldValue, newValue) -> {
+                        double yTranslate = ((newValue.doubleValue() * (AIManager.ac_array.size()*hour_spacing+top_margin)) -
+                                             (newValue.doubleValue() * (sp.getHeight()-19)));
+                        hours_label.translateYProperty().setValue(yTranslate);
+                        hours_rec.translateYProperty().setValue(yTranslate);
+                    });
+                    
+                    //ADDING TO PANES
+                    results.getChildren().add(hours_label);
+                
                 }
             }   
         }

@@ -26,6 +26,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -45,8 +46,8 @@ public class AIManager extends Application {
     static ToggleButton btn_load = new ToggleButton("");
     static Button btn_reset = new Button("reset");
     static Button btn_search = new Button("SEARCH");
-    
-    static Pane hbox3 = new Pane();
+    static ScrollPane sp = new ScrollPane();
+    static VBox vbox1 = new VBox();
     
     @Override
     public void start(Stage primaryStage) {
@@ -56,9 +57,9 @@ public class AIManager extends Application {
         Image img_load = new Image(getClass().getClassLoader().getResourceAsStream("Images/icon_load.png"));
         
         //VBOX
-        VBox vbox1 = new VBox();
+        
         vbox1.setMinSize(100, 105);
-        vbox1.setStyle("-fx-background-color:#003366");
+        vbox1.setStyle("-fx-background-color:#003366;");
         
         //HBOX
         HBox hbox1 = new HBox(15);
@@ -69,17 +70,14 @@ public class AIManager extends Application {
         
         HBox hbox2 = new HBox();
         hbox2.setMinSize(vbox1.getWidth(), 30);
-        hbox2.setStyle("-fx-background-color:#2b2b3b");
+        hbox2.setStyle("-fx-background-color:#2b2b3b;");
         hbox2.setAlignment(Pos.CENTER_LEFT);
-        
-        hbox3.setMinSize(vbox1.getWidth(), 20);
-        hbox3.setStyle("-fx-background-color:#003366");
         
         //Panes
         BorderPane main_pane = new BorderPane();
         
         results.setMinSize(1800,1000);
-        results.setStyle("-fx-background-color:#b0cce8");
+        results.setStyle("-fx-background-color:#b0cce8;");
         
         //Buttons
         btn_load.setGraphic(new ImageView(img_load));
@@ -124,15 +122,18 @@ public class AIManager extends Application {
         //add to children
         hbox1.getChildren().addAll(btn_load,load_text,sep1,airport_text,airline_text,ac_text,down_text,btn_search,btn_reset);
         hbox2.getChildren().addAll(status_txt,ac_count_txt);
-        vbox1.getChildren().addAll(hbox1,hbox2,hbox3);
+        vbox1.getChildren().addAll(hbox1,hbox2);
         
         //Setting Scene
-        ScrollPane sp = new ScrollPane();
+        
         sp.setContent(results);
-        sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        sp.setStyle("-fx-border-color: #003366;");
+        
+        //sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         /*Tooltip hello = new Tooltip();
         hello.setText("I love Julesy");
         sp.setTooltip(hello);*/
+        
         
         main_pane.setTop(vbox1);
         main_pane.setCenter(sp);
