@@ -96,11 +96,15 @@ public class AIManager extends Application {
         //TXT Fields
         load_text.setMinHeight(25);
         load_text.setMinWidth(400);
+        
         airport_text.setText("Airport Code");
+        airport_text.setOnMouseReleased(new ClickAction());
         
         flight_text.setText("Flight Number");
+        flight_text.setOnMouseReleased(new ClickAction());
 
         ac_text.setText("Aircraft Number");
+        ac_text.setOnMouseReleased(new ClickAction());
         
         down_text.setText("4");
         down_text.setMaxWidth(30);

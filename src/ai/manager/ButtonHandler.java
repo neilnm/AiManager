@@ -11,6 +11,7 @@ import static ai.manager.AIManager.results;
 import static ai.manager.AIManager.sp;
 import static ai.manager.AIManager.flight_text;
 import static ai.manager.AIManager.ac_text;
+import static ai.manager.AIManager.airport_text;
 
 
 //Java Imports
@@ -39,7 +40,6 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
     
     @Override
     public void handle(ActionEvent action_event){
-        
         //LOAD BUTTON
         if(action_event.getSource().equals(AIManager.btn_load)){
             ac_array.clear();
@@ -63,6 +63,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             results.getChildren().clear();
             flight_text.setText("Flight Number");
             ac_text.setText("Aircraft Number");
+            airport_text.setText("Airport Code");
             sp.setVvalue(0);
             
             printAllAcs();
@@ -78,6 +79,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             int num_results = 0;
             String flight_num;
             String ac_num;
+            String airport_code;
             
             if (flight_text.getText().equals("Flight Number")){
                 flight_num = "*";
@@ -92,6 +94,14 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             else{
                 ac_num = ac_text.getText();
             }
+            
+            if (airport_text.getText().equals("Airport Code")){
+                airport_code = "*";
+            }
+            else{
+                airport_code = airport_text.getText();
+            }
+            
             
             for(int i=0; i<ac_array.size(); i++){
                 ac_array.get(i).setHasLongGround(false);
@@ -118,7 +128,11 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 for(int i = 0; i < ac_array.get(j).flight_array.size(); i++){
                     if(i > 0){
                         double ground_time = ac_array.get(j).getFlight(i).getDepTimeRatio() - ac_array.get(j).getFlight(i-1).getArrTimeRatio();
-                        if(ground_time >= Integer.parseInt(AIManager.down_text.getText())*100){
+                        
+                        if((ground_time >= Integer.parseInt(AIManager.down_text.getText())*100 &&
+                            airport_code.equals(ac_array.get(j).getFlight(i-1).getArrstation())) ||
+                           (ground_time >= Integer.parseInt(AIManager.down_text.getText())*100 &&
+                           (airport_code.equals("*") || airport_code.equalsIgnoreCase("")))){
                             ac_array.get(j).setHasLongGround(true);
                         }
                     }
@@ -126,9 +140,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 
                 //Checking if AC matches search criteria
                 if ((ac_array.get(j).getHasLongGround() && ac_array.get(j).getFlightnum().contains(flight_num) && String.valueOf(ac_array.get(j).getAcnum()).contains(ac_num)) ||
-                   (ac_array.get(j).getHasLongGround() && flight_num.equals("*") && String.valueOf(ac_array.get(j).getAcnum()).contains(ac_num)) ||
-                   (ac_array.get(j).getHasLongGround() && ac_array.get(j).getFlightnum().contains(flight_num) && ac_num.equals("*")) ||
-                   (ac_array.get(j).getHasLongGround() && flight_num.equals("*") && ac_num.equals("*"))){
+                    (ac_array.get(j).getHasLongGround() && flight_num.equals("*") && String.valueOf(ac_array.get(j).getAcnum()).contains(ac_num)) ||
+                    (ac_array.get(j).getHasLongGround() && ac_array.get(j).getFlightnum().contains(flight_num) && ac_num.equals("*")) ||
+                    (ac_array.get(j).getHasLongGround() && flight_num.equals("*") && ac_num.equals("*"))){
                     
                     num_results++;
                     
@@ -153,17 +167,21 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     //Drawing Flights
                     for(int i = 0; i < ac_array.get(j).flight_array.size(); i++){
                         //VARIABLES
-                        double dep_time_in_gui = timeTopixel(ac_array.get(j).getFlight(i).getDepTimeRatio());
-                        double arr_time_in_gui = timeTopixel(ac_array.get(j).getFlight(i).getArrTimeRatio());
+                        double dep_time_in_gui = ac_array.get(j).getFlight(i).getDepTimeInGui();
+                        double arr_time_in_gui = ac_array.get(j).getFlight(i).getArrTimeInGui();
                         double duration_in_gui = arr_time_in_gui - dep_time_in_gui;
                         
                         if(i>0){
                             double ground_time = ac_array.get(j).getFlight(i).getDepTimeRatio() - ac_array.get(j).getFlight(i-1).getArrTimeRatio();
-                            if(ground_time >= Integer.parseInt(AIManager.down_text.getText())*100){
+                            
+                            if((ground_time >= Integer.parseInt(AIManager.down_text.getText())*100 &&
+                                airport_code.equals(ac_array.get(j).getFlight(i-1).getArrstation())) ||
+                               (ground_time >= Integer.parseInt(AIManager.down_text.getText())*100 &&
+                               (airport_code.equals("*") || airport_code.equalsIgnoreCase("")))){
                                 Line conn_line = new Line();
-                                conn_line.setStartX(timeTopixel(ac_array.get(j).getFlight(i-1).getArrTimeRatio())+31.5);
+                                conn_line.setStartX(ac_array.get(j).getFlight(i-1).getArrTimeInGui()+31.5);
                                 conn_line.setStartY((num_results-1)*30+34);
-                                conn_line.setEndX(timeTopixel(ac_array.get(j).getFlight(i).getDepTimeRatio())+30);
+                                conn_line.setEndX(ac_array.get(j).getFlight(i).getDepTimeInGui()+30);
                                 conn_line.setEndY((num_results-1)*30+34);
                                 conn_line.setStroke(Color.RED);
                                 conn_line.setStrokeWidth(2.5);
