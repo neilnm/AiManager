@@ -43,7 +43,7 @@ public class Flight{
     }
     
     //Method to return minutes in % ratio. Example: 30 minutes = 50; 45 minutes = 75.
-    public double getDeptimeRatio(){
+    public double getDepTimeRatio(){
         double deptime;
         double deptime_100;
         double hours;
@@ -59,7 +59,7 @@ public class Flight{
     }
     
     //Method to return minutes in % ratio. Example: 30 minutes = 50; 45 minutes = 75.
-    public double getArrtimeRatio(){
+    public double getArrTimeRatio(){
         double arrtime;
         double deptime;
         double arrtime_100;
@@ -81,48 +81,63 @@ public class Flight{
         return arrtime_100;
     }
     
-    //****CHECK IF REALLY NEEDED****//
-    //Method to return minutes in % ratio. Example: 30 minutes = 50; 45 minutes = 75.
+    //Method to return duration in % ratio. Example: 30 minutes = 50; 45 minutes = 75.
     public double getDurationRatio(){
-        double duration;
-        double duration_100;
-        double hours;
-        double minutes;
-        double minutes_100;
-        duration = getArrtime()-getDeptime();
-        
-        //For Minutes more than 60 minutes
-        if(getArrtime()-getDeptime()<=100 && getArrtime()-getDeptime()>60){
-            duration = getArrtime()-getDeptime()-40;
-        }
-        if(getArrtime()<getDeptime()){
-            minutes = duration % 100;
-            hours = duration - minutes;
-            minutes_100 = (minutes / 60) * 100;
-            duration_100 = hours + minutes_100;
-            return duration_100;
-        }
-        minutes = duration % 100;
-        hours = duration - minutes;
-        minutes_100 = (minutes / 60) * 100;
-        duration_100 = hours + minutes_100;
-        System.out.println("duration: "+duration);
-        System.out.println("minutes: "+minutes);
-        System.out.println("hours: "+hours);
-        System.out.println("minutes_100: "+minutes_100);
-        System.out.println("duration_100: "+duration_100);
-        return duration_100;
+        return getArrTimeRatio() - getDepTimeRatio();
+    }
+    
+    public double getDepTimeInGui(){
+        //Divided by 100 because 134 time is 1.34 hours * 30 (30 is spacing per hour) + 130 (130 is 100 for margin spacing and 30 for 1 hour spacing because starting at 00:00)
+        //Returning a minimum of 130 
+        return getDepTimeRatio()/100*30+100;
+    }
+    
+    public double getArrTimeInGui(){
+        //Divided by 100 because 134 time is 1.34 hours * 30 (30 is spacing per hour) + 130 (130 is 100 for margin spacing and 30 for 1 hour spacing because starting at 00:00)
+        //Returning a minimum of 130 
+        return getArrTimeRatio()/100*30+100;
     }
     
     //TO STRING
     @Override
     public String toString(){
-        String dep_time_S = String.valueOf(dep_time);
-        String arr_time_S = String.valueOf(arr_time);
-        String Flight_S = dep_station + "\n" +
-                          dep_time_S  + "\n" +
-                          arr_station + "\n" +
-                          arr_time_S;
+        double dep_time_check = dep_time;
+        if(dep_time_check > 2359){
+            dep_time_check = dep_time_check - 2400;
+        }
+        String dep_time_S = String.valueOf(dep_time_check).replace(".0","");
+        String arr_time_S = String.valueOf(arr_time).replace(".0","");
+        
+        if(dep_time_S.length() < 2){
+            dep_time_S = "000"+dep_time_S;
+        }
+        
+        if(arr_time_S.length() < 2){
+            arr_time_S = "000"+arr_time_S;
+        }
+        
+        if(dep_time_S.length() < 3){
+            dep_time_S = "00"+dep_time_S;
+        }
+        
+        if(arr_time_S.length() < 3){
+            arr_time_S = "00"+arr_time_S;
+        }
+        
+        if(dep_time_S.length() < 4){
+            dep_time_S = "0"+dep_time_S;
+        }
+        
+        if(arr_time_S.length() < 4){
+            arr_time_S = "0"+arr_time_S;
+        }
+
+        
+        dep_time_S = dep_time_S.substring(0, 2) + ":" +dep_time_S.subSequence(2, 4);
+        arr_time_S = arr_time_S.substring(0, 2) + ":" +arr_time_S.subSequence(2, 4);
+        
+        String Flight_S = dep_station + " - " + arr_station + "\n" +
+                          dep_time_S + " - " + arr_time_S;
         return Flight_S;
     }
     

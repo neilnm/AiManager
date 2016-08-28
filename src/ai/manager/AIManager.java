@@ -24,36 +24,37 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 
 public class AIManager extends Application {
     
     //Static Variables
     static TextField load_text = new TextField();
     static TextField down_text = new TextField();
+    static TextField flight_text = new TextField();
+    static TextField ac_text = new TextField();
+    static TextField airport_text = new TextField();
+    
     static String filePathInput = new String();
+
+    
     static List <Aircraft> ac_array = new ArrayList<>();
     static List <Aircraft> search_array = new ArrayList<>();
-    static List <Rectangle> rec_array = new ArrayList<>();
+    
     static Label ac_count_txt = new Label();
-    static Pane results = new Pane();
+    static Label search_count_txt = new Label();
+    
     static ToggleButton btn_load = new ToggleButton("");
     static Button btn_reset = new Button("reset");
     static Button btn_search = new Button("SEARCH");
+    
+    static Pane results = new Pane();
     static ScrollPane sp = new ScrollPane();
     static VBox vbox1 = new VBox();
-    static TextField flight_text = new TextField();
-    static TextField ac_text = new TextField();
     
     @Override
     public void start(Stage primaryStage) {
-        
         //***********GUI Setup**************//
         //images
         Image img_load = new Image(getClass().getClassLoader().getResourceAsStream("Images/icon_load.png"));
@@ -95,8 +96,6 @@ public class AIManager extends Application {
         //TXT Fields
         load_text.setMinHeight(25);
         load_text.setMinWidth(400);
-        
-        TextField airport_text = new TextField();
         airport_text.setText("Airport Code");
         
         flight_text.setText("Flight Number");
@@ -116,6 +115,9 @@ public class AIManager extends Application {
         ac_count_txt.setStyle("-fx-text-fill:#F0FFFF");
         ac_count_txt.setPadding(new Insets(0,0,0,50));
         
+        search_count_txt.setText("Aircraft Found: 0");
+        search_count_txt.setStyle("-fx-text-fill:#F0FFFF");
+        search_count_txt.setPadding(new Insets(0,0,0,50));
         
         //Others
         Separator sep1 = new Separator();
@@ -123,19 +125,13 @@ public class AIManager extends Application {
         
         //add to children
         hbox1.getChildren().addAll(btn_load,load_text,sep1,ac_text,flight_text,airport_text,down_text,btn_search,btn_reset);
-        hbox2.getChildren().addAll(status_txt,ac_count_txt);
+        hbox2.getChildren().addAll(status_txt,ac_count_txt,search_count_txt);
         vbox1.getChildren().addAll(hbox1,hbox2);
         
         //Setting Scene
         
         sp.setContent(results);
         sp.setStyle("-fx-border-color: #003366;");
-        
-        //sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        /*Tooltip hello = new Tooltip();
-        hello.setText("I love Julesy");
-        sp.setTooltip(hello);*/
-        
         
         main_pane.setTop(vbox1);
         main_pane.setCenter(sp);
@@ -156,3 +152,7 @@ public class AIManager extends Application {
     }
     
 }
+
+        /*Tooltip hello = new Tooltip();
+        hello.setText("I love Julesy");
+        sp.setTooltip(hello);*/
