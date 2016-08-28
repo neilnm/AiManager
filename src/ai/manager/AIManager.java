@@ -48,6 +48,8 @@ public class AIManager extends Application {
     static Button btn_search = new Button("SEARCH");
     static ScrollPane sp = new ScrollPane();
     static VBox vbox1 = new VBox();
+    static TextField flight_text = new TextField();
+    static TextField ac_text = new TextField();
     
     @Override
     public void start(Stage primaryStage) {
@@ -96,9 +98,9 @@ public class AIManager extends Application {
         
         TextField airport_text = new TextField();
         airport_text.setText("Airport Code");
-        TextField airline_text = new TextField();
-        airline_text.setText("Airline Code");
-        TextField ac_text = new TextField();
+        
+        flight_text.setText("Flight Number");
+
         ac_text.setText("Aircraft Number");
         
         down_text.setText("4");
@@ -120,7 +122,7 @@ public class AIManager extends Application {
         sep1.setOrientation(Orientation.VERTICAL);
         
         //add to children
-        hbox1.getChildren().addAll(btn_load,load_text,sep1,airport_text,airline_text,ac_text,down_text,btn_search,btn_reset);
+        hbox1.getChildren().addAll(btn_load,load_text,sep1,ac_text,flight_text,airport_text,down_text,btn_search,btn_reset);
         hbox2.getChildren().addAll(status_txt,ac_count_txt);
         vbox1.getChildren().addAll(hbox1,hbox2);
         

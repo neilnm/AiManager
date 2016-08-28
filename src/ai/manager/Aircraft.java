@@ -10,6 +10,7 @@ public class Aircraft{
     
     //Variables
     List<Flight> flight_array = new ArrayList<>();
+    private boolean has_long_ground = false;
     
     //Constructor
     public Aircraft(int ac_num,String flight_num){
@@ -17,7 +18,16 @@ public class Aircraft{
         this.flight_num = flight_num;
     }
     
+    //set
+    public void setHasLongGround(boolean has_long_ground){
+        this.has_long_ground = has_long_ground;
+     }
+    
     //Get Methods
+    public boolean getHasLongGround(){
+        return has_long_ground;
+    }
+    
     public int getAcnum(){
         return ac_num;
     }
