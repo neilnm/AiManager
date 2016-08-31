@@ -126,15 +126,21 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 
                 //Marking ACs which has a long ground connection
                 for(int i = 0; i < ac_array.get(j).flight_array.size(); i++){
-                    if(i > 0){
-                        double ground_time = ac_array.get(j).getFlight(i).getDepTimeRatio() - ac_array.get(j).getFlight(i-1).getArrTimeRatio();
-                        
-                        if((ground_time >= Integer.parseInt(AIManager.down_text.getText())*100 &&
-                            airport_code.equals(ac_array.get(j).getFlight(i-1).getArrstation())) ||
-                           (ground_time >= Integer.parseInt(AIManager.down_text.getText())*100 &&
-                           (airport_code.equals("*") || airport_code.equalsIgnoreCase("")))){
-                            ac_array.get(j).setHasLongGround(true);
+                    double ground_time;
+                    if(i == 0){
+                        ground_time = ac_array.get(j).getFlight(i).getDepTimeRatio() - ac_array.get(j).getFlight(ac_array.get(j).flight_array.size()-1).getArrTimeRatio();
+                        if(ground_time<0){
+                            ground_time = ground_time+2400;
                         }
+                    }
+                    else{
+                        ground_time = ac_array.get(j).getFlight(i).getDepTimeRatio() - ac_array.get(j).getFlight(i-1).getArrTimeRatio();
+                    }
+                    if((ground_time >= Integer.parseInt(AIManager.down_text.getText())*100 &&
+                        airport_code.equals(ac_array.get(j).getFlight(i).getDepstation())) ||
+                       (ground_time >= Integer.parseInt(AIManager.down_text.getText())*100 &&
+                       (airport_code.equals("*") || airport_code.equalsIgnoreCase("")))){
+                        ac_array.get(j).setHasLongGround(true);
                     }
                 }
                 
@@ -146,7 +152,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     
                     num_results++;
                     
-                    //HLINES
+                    //HLINES (TO DO: CREATE METHOD)
                     Line h_lines = new Line();
                     h_lines.setStartX(0);
                     h_lines.setStartY(((num_results-1)*30)+18);
@@ -170,25 +176,47 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         double dep_time_in_gui = ac_array.get(j).getFlight(i).getDepTimeInGui();
                         double arr_time_in_gui = ac_array.get(j).getFlight(i).getArrTimeInGui();
                         double duration_in_gui = arr_time_in_gui - dep_time_in_gui;
+                        double ground_time;
                         
-                        if(i>0){
-                            double ground_time = ac_array.get(j).getFlight(i).getDepTimeRatio() - ac_array.get(j).getFlight(i-1).getArrTimeRatio();
-                            
+                        if(i==0){
+                             ground_time = ac_array.get(j).getFlight(i).getDepTimeRatio() - ac_array.get(j).getFlight(ac_array.get(j).flight_array.size()-1).getArrTimeRatio();
+                             if(ground_time<0){
+                                 ground_time = ground_time + 2400;
+                             }
+                        }
+                        else{
+                            ground_time = ac_array.get(j).getFlight(i).getDepTimeRatio() - ac_array.get(j).getFlight(i-1).getArrTimeRatio();
+                        }    
                             if((ground_time >= Integer.parseInt(AIManager.down_text.getText())*100 &&
-                                airport_code.equals(ac_array.get(j).getFlight(i-1).getArrstation())) ||
+                                airport_code.equals(ac_array.get(j).getFlight(i).getDepstation())) ||
                                (ground_time >= Integer.parseInt(AIManager.down_text.getText())*100 &&
                                (airport_code.equals("*") || airport_code.equalsIgnoreCase("")))){
+                                
                                 Line conn_line = new Line();
-                                conn_line.setStartX(ac_array.get(j).getFlight(i-1).getArrTimeInGui()+31.5);
-                                conn_line.setStartY((num_results-1)*30+34);
-                                conn_line.setEndX(ac_array.get(j).getFlight(i).getDepTimeInGui()+30);
-                                conn_line.setEndY((num_results-1)*30+34);
-                                conn_line.setStroke(Color.RED);
-                                conn_line.setStrokeWidth(2.5);
+                                
+                                if(i==0){
+                                    conn_line.setStartX(ac_array.get(j).getFlight(ac_array.get(j).flight_array.size()-1).getArrTimeInGui()+31.5);
+                                    conn_line.setStartY((num_results-1)*30+34);
+                                    conn_line.setEndX(ac_array.get(j).getFlight(ac_array.get(j).flight_array.size()-1).getArrTimeInGui()+101.5);
+                                    conn_line.setEndY((num_results-1)*30+34);
+                                    conn_line.setStroke(Color.RED);
+                                    conn_line.setStrokeWidth(2.5);
+                                    
+                                    results.getChildren().add(conn_line);
+                                }
+                                else{
+                                    //Drawing Connection Line
+                                    conn_line.setStartX(ac_array.get(j).getFlight(i-1).getArrTimeInGui()+31.5);
+                                    conn_line.setStartY((num_results-1)*30+34);
+                                    conn_line.setEndX(ac_array.get(j).getFlight(i).getDepTimeInGui()+30);
+                                    conn_line.setEndY((num_results-1)*30+34);
+                                    conn_line.setStroke(Color.RED);
+                                    conn_line.setStrokeWidth(2.5);
 
-                                results.getChildren().add(conn_line);
+                                    results.getChildren().add(conn_line);
+                                }
+                                
                             }
-                        }
                         
                         //Drawing Aircrafts
                         //REC(X START, Y START, WIDTH, HEIGHT)
@@ -333,7 +361,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
         //Setting AC COUNT TEXT
         AIManager.ac_count_txt.setText("Aircraft Loaded: "+ac_array.size());
         AIManager.search_count_txt.setText("Aircraft Found: "+ac_array.size());
-
+        
         //Drawing H lines and Printing Aircraft Labels
         for (int i=0; i < ac_array.size(); i++) {
             //HLINES
@@ -441,12 +469,5 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             //ADDING TO PANES
             results.getChildren().add(hours_label);
         }
-    }
-    
-    //Convert a time a Gui Pixel (not currently used, moved to Flight Class)
-    public double timeTopixel(double time){
-        //Divided by 100 because 134 time is 1.34 hours * 30 (30 is spacing per hour) + 130 (130 is 100 for margin spacing and 30 for 1 hour spacing because starting at 00:00)
-        //Returning a minimum of 130 
-        return time/100*30+100;
     }
 }
