@@ -6,8 +6,11 @@
  */
 package ai.manager;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import javafx.application.Application;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -42,6 +45,7 @@ public class AIManager extends Application {
     
     static List <Aircraft> ac_array = new ArrayList<>();
     static List <Aircraft> search_array = new ArrayList<>();
+    static ArrayList<String[]> localTimeCommaList = new ArrayList<>();
     
     static Label ac_count_txt = new Label();
     static Label search_count_txt = new Label();
@@ -55,10 +59,11 @@ public class AIManager extends Application {
     static VBox vbox1 = new VBox();
     
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws FileNotFoundException {
         //***********GUI Setup**************//
         //images
         Image img_load = new Image(getClass().getClassLoader().getResourceAsStream("Images/icon_load.png"));
+        Image air = new Image(getClass().getClassLoader().getResourceAsStream("Images/air.png"));
         
         //VBOX
         
@@ -105,6 +110,10 @@ public class AIManager extends Application {
         btn_reset.setOnAction(new ButtonHandler());
         
         btn_search.setOnAction(new ButtonHandler());
+        
+        Button btn_air = new Button();
+        btn_air.setStyle("-fx-background-color: transparent");
+        btn_air.setGraphic(new ImageView(air));
         
         //TXT Fields
         load_text.setMinHeight(25);
@@ -160,7 +169,7 @@ public class AIManager extends Application {
         vbox_flight.getChildren().addAll(flight_label,flight_text);
         vbox_station.getChildren().addAll(station_label,airport_text);
         vbox_hours.getChildren().addAll(hours_label,down_text);
-        hbox1.getChildren().addAll(btn_load,load_text,sep1,vbox_ac,vbox_flight,vbox_station,vbox_hours,sep2,btn_search,btn_reset);
+        hbox1.getChildren().addAll(btn_load,load_text,sep1,vbox_ac,vbox_flight,vbox_station,vbox_hours,sep2,btn_search,btn_reset,btn_air);
         hbox2.getChildren().addAll(status_txt,ac_count_txt,search_count_txt);
         vbox1.getChildren().addAll(hbox1,hbox2);
         
@@ -172,11 +181,24 @@ public class AIManager extends Application {
         main_pane.setTop(vbox1);
         main_pane.setCenter(sp);
         
-        Scene scene = new Scene(main_pane,1625,800);
+        Scene scene = new Scene(main_pane,1450,800);
         
         primaryStage.setTitle("AI Manager by Neil Mancini");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        //Getting Airport Information
+        String username = System.getProperty("user.name");
+        Scanner localTimeReader = new Scanner(new File("C:\\Users\\"+username+"\\Documents\\AirportData\\airportdata.csv"));
+        ArrayList<String> localTimeList = new ArrayList<>();
+        while(localTimeReader.hasNext()){
+            localTimeList.add(localTimeReader.nextLine());
+        }
+        //Converting Aiport Information to a Comma List
+        for(int i = 0; i < localTimeList.size(); i++){
+            localTimeCommaList.add(localTimeList.get(i).split(","));
+        }
+        
     }
     //**************************GUI Setup END********************************//
 

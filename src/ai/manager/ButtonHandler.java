@@ -12,6 +12,7 @@ import static ai.manager.AIManager.sp;
 import static ai.manager.AIManager.flight_text;
 import static ai.manager.AIManager.ac_text;
 import static ai.manager.AIManager.airport_text;
+import static ai.manager.AIManager.localTimeCommaList;
 
 
 //Java Imports
@@ -32,9 +33,9 @@ import javafx.stage.FileChooser;
 public class ButtonHandler implements EventHandler<ActionEvent>{
     
     //Margin and Spacing Variables
-    final int top_margin = 18;
+    final int top_margin = 36;
     final int left_margin = 130;
-    final int ac_label_spacing = 20;
+    final int ac_label_spacing = 38;
     final int ac_line_spacing = 30;
     final int hour_spacing = 30;
     
@@ -155,15 +156,15 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     //HLINES (TO DO: CREATE METHOD)
                     Line h_lines = new Line();
                     h_lines.setStartX(0);
-                    h_lines.setStartY(((num_results-1)*30)+18);
+                    h_lines.setStartY(((num_results-1)*30)+36);
                     h_lines.setEndX(2000);
-                    h_lines.setEndY((num_results-1)*30+18);
+                    h_lines.setEndY((num_results-1)*30+36);
                     h_lines.setStroke(Color.LIGHTSLATEGREY);
 
                     //AIRCRAFT LABELS
                     Label ac_label = new Label((num_results-1)+1+" AC#"+String.valueOf(ac_array.get(j).getAcnum())+" "+ac_array.get(j).getFlightnum());
                     ac_label.setLayoutX(0);
-                    ac_label.setLayoutY((num_results-1)*30+20);
+                    ac_label.setLayoutY((num_results-1)*30+40);
                     ac_label.setTextFill(Color.BLACK);
                     
                     //ADDING TO RESULT PANE
@@ -196,9 +197,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                                 
                                 if(i==0){
                                     conn_line.setStartX(ac_array.get(j).getFlight(ac_array.get(j).flight_array.size()-1).getArrTimeInGui()+31.5);
-                                    conn_line.setStartY((num_results-1)*30+34);
+                                    conn_line.setStartY((num_results-1)*30+52);
                                     conn_line.setEndX(ac_array.get(j).getFlight(ac_array.get(j).flight_array.size()-1).getArrTimeInGui()+101.5);
-                                    conn_line.setEndY((num_results-1)*30+34);
+                                    conn_line.setEndY((num_results-1)*30+52);
                                     conn_line.setStroke(Color.RED);
                                     conn_line.setStrokeWidth(2.5);
                                     
@@ -207,9 +208,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                                 else{
                                     //Drawing Connection Line
                                     conn_line.setStartX(ac_array.get(j).getFlight(i-1).getArrTimeInGui()+31.5);
-                                    conn_line.setStartY((num_results-1)*30+34);
+                                    conn_line.setStartY((num_results-1)*30+52);
                                     conn_line.setEndX(ac_array.get(j).getFlight(i).getDepTimeInGui()+30);
-                                    conn_line.setEndY((num_results-1)*30+34);
+                                    conn_line.setEndY((num_results-1)*30+52);
                                     conn_line.setStroke(Color.RED);
                                     conn_line.setStrokeWidth(2.5);
 
@@ -220,7 +221,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         
                         //Drawing Aircrafts
                         //REC(X START, Y START, WIDTH, HEIGHT)
-                        Rectangle leg_rec = new Rectangle(dep_time_in_gui+30,(num_results-1)*30+26,duration_in_gui,15);
+                        Rectangle leg_rec = new Rectangle(dep_time_in_gui+30,(num_results-1)*30+44,duration_in_gui,15);
                         Tooltip stations = new Tooltip();
                         stations.setText(ac_array.get(j).getFlight(i).toString());
 //                        if (ac_array.get(j).getFlight(i).getDeptime() >= 2400){
@@ -243,32 +244,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 }
             }
            
-            //Rectangle for Hours header
-            Rectangle hours_rec = new Rectangle(0,0,2000,17);
-            hours_rec.setFill(Color.web("#003366"));
-            hours_rec.setStroke(Color.web("#003366"));
-            results.getChildren().add(hours_rec);
-
-            //Loops for hours header
-            for(int i=0; i<=48; i++){
-                //Hour Labels
-                Label hours_label = new Label(String.valueOf(i));
-                if(i > 24){
-                    hours_label.setText(String.valueOf(i-24));
-                }
-                hours_label.setLayoutX((30*i)+127);
-                hours_label.setLayoutY(1);
-                hours_label.setTextFill(Color.WHITE);
-
-                sp.vvalueProperty().addListener( (observable, oldValue, newValue) -> {
-                    double yTranslate = ((newValue.doubleValue() * (ac_array.size()*30+18)) -
-                                         (newValue.doubleValue() * (sp.getHeight()-18)));
-                    hours_label.translateYProperty().setValue(yTranslate);
-                    hours_rec.translateYProperty().setValue(yTranslate);
-                });
-                    //ADDING TO PANES
-                    results.getChildren().add(hours_label);
-            }
+            printHoursHeader();
             
             //Reloading ac count text
             AIManager.search_count_txt.setText("Aircraft Found: "+num_results);
@@ -362,6 +338,8 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
         AIManager.ac_count_txt.setText("Aircraft Loaded: "+ac_array.size());
         AIManager.search_count_txt.setText("Aircraft Found: "+ac_array.size());
         
+        
+        
         //Drawing H lines and Printing Aircraft Labels
         for (int i=0; i < ac_array.size(); i++) {
             //HLINES
@@ -410,7 +388,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
 
                 //Drawing Aircrafts
                 //REC(X START, Y START, WIDTH, HEIGHT)
-                Rectangle leg_rec = new Rectangle(dep_time_in_gui+30,j*30+26,duration_in_gui,15);
+                Rectangle leg_rec = new Rectangle(dep_time_in_gui+30,j*30+44,duration_in_gui,15);
                 Tooltip stations = new Tooltip();
                 stations.setText(ac_array.get(j).getFlight(i).toString());
                 Font font = new Font("Verdana",20);
@@ -434,22 +412,35 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 depl.setLayoutY(j*ac_line_spacing+26);
                 arrl.setLayoutY(j*ac_line_spacing+26);
 
-
+                
+                
                 //Adding to Rectangle Array and to results pane
                 //AIManager.rec_array.add(leg_rec);
                 results.getChildren().addAll(leg_rec);
             }
         }
-
+        printHoursHeader();
+    }
+    public void printHoursHeader(){
+        //Variables
+        String airport = airport_text.getText();
+        String hours;
+        int hoursInt;
+        int timeDifference;
+        
         //Rectangle for Hours header
         Rectangle hours_rec = new Rectangle(0,0,2000,17);
         hours_rec.setFill(Color.web("#003366"));
         hours_rec.setStroke(Color.web("#003366"));
-        results.getChildren().add(hours_rec);
-
+        
+        Rectangle local_hours_rec = new Rectangle(0,18,2000,17);
+        local_hours_rec.setFill(Color.web("#000000"));
+        local_hours_rec.setStroke(Color.web("#000000"));
+        results.getChildren().addAll(hours_rec,local_hours_rec);
+        
         //Loops for hours header
         for(int i=0; i<=48; i++){
-
+            hoursInt = i;
             //Hour Labels
             Label hours_label = new Label(String.valueOf(i));
             if(i > 24){
@@ -458,16 +449,44 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             hours_label.setLayoutX((30*i)+127);
             hours_label.setLayoutY(1);
             hours_label.setTextFill(Color.WHITE);
+            
+            
+            //Local Time Hour Labels
+            if(airport.length()==4){
+                for(int k=0; k < localTimeCommaList.size()-1; k++){
+                    if(airport.equalsIgnoreCase(localTimeCommaList.get(k)[0])){
+                        timeDifference = Integer.parseInt(localTimeCommaList.get(k)[1]);
+                        hoursInt = i+timeDifference;
+                    }
+                }
+            }
+            
+            Label local_hours_label = new Label();
+            hours = String.valueOf(hoursInt);
+            if(hoursInt<0){
+                hours = String.valueOf((hoursInt)+24);
+            }
+            if(hoursInt > 24){
+                hours = String.valueOf((hoursInt)-24);
+            }
+            local_hours_label.setText(hours);
+            
+            local_hours_label.setLayoutX((30*i)+127);
+            local_hours_label.setLayoutY(19);
+            local_hours_label.setTextFill(Color.LIGHTSKYBLUE);
+            
 
             sp.vvalueProperty().addListener( (observable, oldValue, newValue) -> {
                 double yTranslate = ((newValue.doubleValue() * (ac_array.size()*hour_spacing+top_margin)) -
                                      (newValue.doubleValue() * (sp.getHeight()-18)));
                 hours_label.translateYProperty().setValue(yTranslate);
                 hours_rec.translateYProperty().setValue(yTranslate);
+                local_hours_rec.translateYProperty().setValue(yTranslate);
+                local_hours_label.translateYProperty().setValue(yTranslate);
             });
 
             //ADDING TO PANES
-            results.getChildren().add(hours_label);
+            results.getChildren().addAll(hours_label,local_hours_label);
         }
     }
 }
