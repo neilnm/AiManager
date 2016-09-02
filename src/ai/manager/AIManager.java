@@ -49,6 +49,8 @@ public class AIManager extends Application {
     
     static Label ac_count_txt = new Label();
     static Label search_count_txt = new Label();
+    static Label status_txt = new Label();
+    static Label missingAirportTxt = new Label();
     
     static ToggleButton btn_load = new ToggleButton("");
     static Button btn_reset = new Button("reset");
@@ -57,6 +59,7 @@ public class AIManager extends Application {
     static Pane results = new Pane();
     static ScrollPane sp = new ScrollPane();
     static VBox vbox1 = new VBox();
+    static HBox hbox2 = new HBox();
     
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
@@ -77,7 +80,7 @@ public class AIManager extends Application {
         hbox1.setAlignment(Pos.CENTER_LEFT);
         hbox1.setPadding(new Insets(0,15,0,15));
         
-        HBox hbox2 = new HBox();
+        
         hbox2.setMinSize(vbox1.getWidth(), 30);
         hbox2.setStyle("-fx-background-color:#2b2b3b;");
         hbox2.setAlignment(Pos.CENTER_LEFT);
@@ -143,8 +146,12 @@ public class AIManager extends Application {
         search_count_txt.setStyle("-fx-text-fill:#F0FFFF");
         search_count_txt.setPadding(new Insets(0,0,0,50));
         
+        missingAirportTxt.setText("Missing Airport");
+        missingAirportTxt.setStyle("-fx-text-fill:#666699");
+        missingAirportTxt.setPadding(new Insets(0,0,0,50));
+        
         //Labels
-        Label status_txt = new Label();
+        
         status_txt.setText("STATUS:");
         status_txt.setStyle("-fx-text-fill:#7FFF00");
         status_txt.setPadding(new Insets(0,0,0,32));
@@ -170,7 +177,7 @@ public class AIManager extends Application {
         vbox_station.getChildren().addAll(station_label,airport_text);
         vbox_hours.getChildren().addAll(hours_label,down_text);
         hbox1.getChildren().addAll(btn_load,load_text,sep1,vbox_ac,vbox_flight,vbox_station,vbox_hours,sep2,btn_search,btn_reset,btn_air);
-        hbox2.getChildren().addAll(status_txt,ac_count_txt,search_count_txt);
+        hbox2.getChildren().addAll(status_txt,ac_count_txt,search_count_txt,missingAirportTxt);
         vbox1.getChildren().addAll(hbox1,hbox2);
         
         //Setting Scene
