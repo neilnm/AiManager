@@ -13,6 +13,8 @@ import static ai.manager.AIManager.flight_text;
 import static ai.manager.AIManager.ac_text;
 import static ai.manager.AIManager.airport_text;
 import static ai.manager.AIManager.localTimeCommaList;
+import static ai.manager.AIManager.missingAirportTxt;
+import static ai.manager.AIManager.status_txt;
 
 
 //Java Imports
@@ -66,9 +68,10 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             ac_text.setText("Aircraft Number");
             airport_text.setText("Airport Code");
             sp.setVvalue(0);
-            
             printAllAcs();
             AIManager.search_count_txt.setText("Aircraft Found: "+ac_array.size());
+            status_txt.setStyle("-fx-text-fill:#7FFF00");
+            missingAirportTxt.setStyle("-fx-text-fill:#666699");
         }
         
         //SEARCH BUTTON
@@ -76,6 +79,8 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             //Clearing Arrays and Result Pane
             results.getChildren().clear();
             sp.setVvalue(0);
+            status_txt.setStyle("-fx-text-fill:#7FFF00");
+            missingAirportTxt.setStyle("-fx-text-fill:#666699");
             
             int num_results = 0;
             String flight_num;
@@ -421,12 +426,15 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
         }
         printHoursHeader();
     }
+    
+    
     public void printHoursHeader(){
         //Variables
         String airport = airport_text.getText();
         String hours;
         int hoursInt;
         int timeDifference;
+        boolean missingAirport = false;
         
         //Rectangle for Hours header
         Rectangle hours_rec = new Rectangle(0,0,2000,17);
@@ -452,16 +460,24 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             
             
             //Local Time Hour Labels
-            if(airport.length()==4){
+            if(!airport.equalsIgnoreCase("") && !airport.equalsIgnoreCase("*") && !airport.equalsIgnoreCase("Airport Code")){
+                missingAirport = true;
                 for(int k=0; k < localTimeCommaList.size()-1; k++){
                     if(airport.equalsIgnoreCase(localTimeCommaList.get(k)[0])){
                         timeDifference = Integer.parseInt(localTimeCommaList.get(k)[1]);
                         hoursInt = i+timeDifference;
+                        missingAirport = false;
                     }
                 }
             }
             
             Label local_hours_label = new Label();
+            local_hours_label.setLayoutX((30*i)+127);
+            local_hours_label.setLayoutY(19);
+            local_hours_label.setTextFill(Color.LIGHTSKYBLUE);
+            if(missingAirport){
+                local_hours_label.setTextFill(Color.RED);
+            }
             hours = String.valueOf(hoursInt);
             if(hoursInt<0){
                 hours = String.valueOf((hoursInt)+24);
@@ -469,11 +485,10 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             if(hoursInt > 24){
                 hours = String.valueOf((hoursInt)-24);
             }
+
             local_hours_label.setText(hours);
             
-            local_hours_label.setLayoutX((30*i)+127);
-            local_hours_label.setLayoutY(19);
-            local_hours_label.setTextFill(Color.LIGHTSKYBLUE);
+
             
 
             sp.vvalueProperty().addListener( (observable, oldValue, newValue) -> {
@@ -487,6 +502,10 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
 
             //ADDING TO PANES
             results.getChildren().addAll(hours_label,local_hours_label);
+        }
+        if(missingAirport){
+            status_txt.setStyle("-fx-text-fill:#ff0000");
+            missingAirportTxt.setStyle("-fx-text-fill:#ff0000");
         }
     }
 }
