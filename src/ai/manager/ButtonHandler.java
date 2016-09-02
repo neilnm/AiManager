@@ -120,7 +120,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 v_lines.setStartX(30*i+130);
                 v_lines.setStartY(0);
                 v_lines.setEndX(30*i+130);
-                v_lines.setEndY(ac_array.size()*30+18);
+                v_lines.setEndY(ac_array.size()*30+36);
                 v_lines.setStroke(Color.LIGHTSLATEGREY);
 
                 //ADDING TO PANE
@@ -248,9 +248,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     }
                 }
             }
-           
             printHoursHeader();
-            
             //Reloading ac count text
             AIManager.search_count_txt.setText("Aircraft Found: "+num_results);
         }
@@ -404,21 +402,6 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 if((j%2>0)){
                     leg_rec.setFill(Color.BLUEVIOLET);
                 }
-                //Border Radius does not seem to work
-                //r.setStyle("-fx-border-radius: 10 10 10 10");
-
-                //Station Labels
-                Label depl = new Label();
-                Label arrl = new Label();
-                depl.setText(ac_array.get(j).getFlight(i).getDepstation());
-                arrl.setText(ac_array.get(j).getFlight(i).getArrstation());
-                depl.setLayoutX(dep_time_in_gui);
-                arrl.setLayoutX(arr_time_in_gui+35);
-                depl.setLayoutY(j*ac_line_spacing+26);
-                arrl.setLayoutY(j*ac_line_spacing+26);
-
-                
-                
                 //Adding to Rectangle Array and to results pane
                 //AIManager.rec_array.add(leg_rec);
                 results.getChildren().addAll(leg_rec);
