@@ -89,13 +89,13 @@ public class Flight{
     public double getDepTimeInGui(){
         //Divided by 100 because 134 time is 1.34 hours * 30 (30 is spacing per hour) + 130 (130 is 100 for margin spacing and 30 for 1 hour spacing because starting at 00:00)
         //Returning a minimum of 130 
-        return getDepTimeRatio()/100*30+100;
+        return getDepTimeRatio()/100*30+130;
     }
     
     public double getArrTimeInGui(){
         //Divided by 100 because 134 time is 1.34 hours * 30 (30 is spacing per hour) + 130 (130 is 100 for margin spacing and 30 for 1 hour spacing because starting at 00:00)
         //Returning a minimum of 130 
-        return getArrTimeRatio()/100*30+100;
+        return getArrTimeRatio()/100*30+130;
     }
     
     //TO STRING

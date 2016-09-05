@@ -210,9 +210,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                                     if(j==0){
                                         System.out.println(ac_array.get(j).getFlightnum()+" "+ac_array.get(j).getFlight(i).getDepTimeInGui());
                                     }
-                                    double endX = ac_array.get(j).getFlight(i).getDepTimeInGui() + 750;
+                                    double endX = ac_array.get(j).getFlight(i).getDepTimeInGui() + 720;
                                     
-                                    conn_line.setStartX(ac_array.get(j).getFlight(ac_array.get(j).flight_array.size()-1).getArrTimeInGui()+31.5);
+                                    conn_line.setStartX(ac_array.get(j).getFlight(ac_array.get(j).flight_array.size()-1).getArrTimeInGui()+1.5);
                                     conn_line.setStartY((num_results-1)*acSpacing+middleRow);
                                     conn_line.setEndX(endX);
                                     conn_line.setEndY((num_results-1)*acSpacing+middleRow);
@@ -223,9 +223,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                                 }
                                 else{
                                     //Drawing Connection Line
-                                    conn_line.setStartX(ac_array.get(j).getFlight(i-1).getArrTimeInGui()+31.5);
+                                    conn_line.setStartX(ac_array.get(j).getFlight(i-1).getArrTimeInGui()+1.5);
                                     conn_line.setStartY((num_results-1)*acSpacing+52);
-                                    conn_line.setEndX(ac_array.get(j).getFlight(i).getDepTimeInGui()+30);
+                                    conn_line.setEndX(ac_array.get(j).getFlight(i).getDepTimeInGui());
                                     conn_line.setEndY((num_results-1)*acSpacing+52);
                                     conn_line.setStroke(Color.RED);
                                     conn_line.setStrokeWidth(2.5);
@@ -237,7 +237,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         
                         //Drawing Aircrafts
                         //REC(X START, Y START, WIDTH, HEIGHT)
-                        Rectangle leg_rec = new Rectangle(dep_time_in_gui+30,(num_results-1)*30+44,duration_in_gui,15);
+                        Rectangle leg_rec = new Rectangle(dep_time_in_gui,(num_results-1)*30+44,duration_in_gui,15);
                         Tooltip stations = new Tooltip();
                         stations.setText(ac_array.get(j).getFlight(i).toString());
 //                        if (ac_array.get(j).getFlight(i).getDeptime() >= 2400){
@@ -402,7 +402,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
 
                 //Drawing Aircrafts
                 //REC(X START, Y START, WIDTH, HEIGHT)
-                Rectangle leg_rec = new Rectangle(dep_time_in_gui+30,j*30+44,duration_in_gui,15);
+                Rectangle leg_rec = new Rectangle(dep_time_in_gui,j*30+44,duration_in_gui,15);
                 Tooltip stations = new Tooltip();
                 stations.setText(ac_array.get(j).getFlight(i).toString());
                 Font font = new Font("Verdana",20);
