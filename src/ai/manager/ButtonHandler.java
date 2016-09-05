@@ -434,10 +434,21 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
         hours_rec.setFill(Color.web("#003366"));
         hours_rec.setStroke(Color.web("#003366"));
         
+        Label utcTime = new Label("UTC TIME");
+        utcTime.setTextFill(Color.WHITE);
+        utcTime.setLayoutX(5);
+        utcTime.setLayoutY(0);
+        
         Rectangle local_hours_rec = new Rectangle(0,18,2000,17);
         local_hours_rec.setFill(Color.web("#000000"));
         local_hours_rec.setStroke(Color.web("#000000"));
-        results.getChildren().addAll(hours_rec,local_hours_rec);
+        
+        Label localTime = new Label("LOCAL TIME");
+        localTime.setTextFill(Color.WHITE);
+        localTime.setLayoutX(5);
+        localTime.setLayoutY(18);
+        
+        results.getChildren().addAll(hours_rec,local_hours_rec,utcTime,localTime);
         
         //Loops for hours header
         for(int i=0; i<=48; i++){
@@ -489,8 +500,12 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                                      (newValue.doubleValue() * (sp.getHeight()-18)));
                 hours_label.translateYProperty().setValue(yTranslate);
                 hours_rec.translateYProperty().setValue(yTranslate);
+                utcTime.translateYProperty().setValue(yTranslate);
+                localTime.translateYProperty().setValue(yTranslate);
                 local_hours_rec.translateYProperty().setValue(yTranslate);
                 local_hours_label.translateYProperty().setValue(yTranslate);
+                utcTime.translateYProperty().setValue(yTranslate);
+                localTime.translateYProperty().setValue(yTranslate);
             });
 
             //ADDING TO PANES
