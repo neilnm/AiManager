@@ -76,7 +76,6 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             
             printAllAcs();
             AIManager.search_count_txt.setText("Aircraft Found: "+ac_array.size());
-
         }
         
         //SEARCH BUTTON
@@ -94,7 +93,6 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             String airport_code;
             
             //Setting search variables
-
             if (ac_text.getText().equals("Aircraft Number")){
                 ac_num = "*";
             }
@@ -117,8 +115,8 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             for(int i=0; i<ac_array.size(); i++){
                 ac_array.get(i).setHasLongGround(false);
             }
-            
-            
+
+/***********************METHOD********************************/
             //Drawing Vertical Lines and Hour labels
             for(int i=0; i<=48; i++){
                 //Vertical Lines
@@ -132,6 +130,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 //ADDING TO PANE
                 results.getChildren().add(v_lines);
             }
+/***********************METHOD********************************/
             
             //Printing ACs matching search criteria to screen
             for(int j = 0; j < ac_array.size(); j++){
@@ -155,7 +154,8 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         ac_array.get(j).setHasLongGround(true);
                     }
                 }
-                
+
+/***********************CREATE boolean********************************/                   
                 //Checking if AC matches search criteria
                 if ((ac_array.get(j).getHasLongGround() && ac_array.get(j).getFlightnum().contains(flight_num) && String.valueOf(ac_array.get(j).getAcnum()).contains(ac_num)) ||
                     (ac_array.get(j).getHasLongGround() && flight_num.equals("*") && String.valueOf(ac_array.get(j).getAcnum()).contains(ac_num)) ||
@@ -164,6 +164,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     
                     num_results++;
                     
+/***********************CREATE METHOD********************************/                    
                     //HLINES (TO DO: CREATE METHOD)
                     Line h_lines = new Line();
                     h_lines.setStartX(0);
@@ -172,6 +173,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     h_lines.setEndY((num_results-1)*hourSpacing+topMargin);
                     h_lines.setStroke(Color.LIGHTSLATEGREY);
 
+/***********************CREATE METHOD********************************/
                     //AIRCRAFT LABELS
                     Label ac_label = new Label((num_results-1)+1+" AC#"+String.valueOf(ac_array.get(j).getAcnum())+" "+ac_array.get(j).getFlightnum());
                     ac_label.setLayoutX(0);
@@ -198,7 +200,8 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         }
                         else{
                             ground_time = ac_array.get(j).getFlight(i).getDepTimeRatio() - ac_array.get(j).getFlight(i-1).getArrTimeRatio();
-                        }    
+                        }   
+                            /***********************CREATE BOOLEAN********************************/
                             if((ground_time >= Integer.parseInt(AIManager.down_text.getText())*100 &&
                                 airport_code.equals(ac_array.get(j).getFlight(i).getDepstation())) ||
                                (ground_time >= Integer.parseInt(AIManager.down_text.getText())*100 &&
@@ -239,10 +242,6 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         Rectangle leg_rec = new Rectangle(dep_time_in_gui,(num_results-1)*acSpacing+44,duration_in_gui,15);
                         Tooltip stations = new Tooltip();
                         stations.setText(ac_array.get(j).getFlight(i).toString());
-//                        if (ac_array.get(j).getFlight(i).getDeptime() >= 2400){
-//                            stations.setText(ac_array.get(j).getFlight(i).getDepstation()+"-"+ac_array.get(j).getFlight(i).getArrstation()+"\n"+
-//                            (ac_array.get(j).getFlight(i).getDeptime()-2400)+" - "+ac_array.get(j).getFlight(i).getArrtime());
-//                        }
                         Font font = new Font("Verdana",20);
                         stations.setFont(font);
                         Tooltip.install(leg_rec, stations);
@@ -251,7 +250,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         if((j%2>0)){
                             leg_rec.setFill(Color.BLUEVIOLET);
                         }
-
+                        
                         //Adding to Rectangle Array and to results pane
                         //AIManager.rec_array.add(leg_rec);
                         results.getChildren().addAll(leg_rec);
@@ -351,10 +350,10 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
         AIManager.ac_count_txt.setText("Aircraft Loaded: "+ac_array.size());
         AIManager.search_count_txt.setText("Aircraft Found: "+ac_array.size());
         
-        
-        
         //Drawing H lines and Printing Aircraft Labels
         for (int i=0; i < ac_array.size(); i++) {
+            
+/***********************CREATE METHOD********************************/            
             //HLINES
             Line h_lines = new Line();
             h_lines.setStartX(0);
@@ -362,9 +361,8 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             h_lines.setEndX(2000);
             h_lines.setEndY(i*acSpacing+topMargin);
             h_lines.setStroke(Color.LIGHTSLATEGREY);
-            //Caused performance issues:
-            //r.getStrokeDashArray().addAll(2d);
 
+/***********************CREATE METHOD********************************/            
             //AIRCRAFT LABELS
             Label ac_label = new Label(i+1+" AC#"+String.valueOf(ac_array.get(i).getAcnum())+" "+ac_array.get(i).getFlightnum());
             ac_label.setLayoutX(0);
@@ -378,6 +376,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
 
         //Drawing Vertical Lines and Hour labels
         for(int i=0; i<=48; i++){
+/***********************CREATE METHOD********************************/            
             //Vertical Lines
             Line v_lines = new Line();
             v_lines.setStartX(hourSpacing*i+leftMargin);
@@ -491,9 +490,6 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             }
 
             local_hours_label.setText(hours);
-            
-
-            
 
             sp.vvalueProperty().addListener((observable, oldValue, newValue) -> {
                 double yTranslate = ((newValue.doubleValue() * (ac_array.size()*hourSpacing+topMargin)) -
