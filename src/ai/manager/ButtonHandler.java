@@ -16,7 +16,6 @@ import static ai.manager.AIManager.localTimeCommaList;
 import static ai.manager.AIManager.missingAirportTxt;
 import static ai.manager.AIManager.status_txt;
 
-
 //Java Imports
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,20 +34,23 @@ import javafx.stage.FileChooser;
 public class ButtonHandler implements EventHandler<ActionEvent>{
     
     //Margin and Spacing Variables
-    final int top_margin = 36;
-    final int left_margin = 130;
-    final int ac_label_spacing = 38;
-    final int ac_line_spacing = 30;
-    final int hour_spacing = 30;
+    final int topMargin = 36;
+    final int leftMargin = 130;
+    final int acLabelSpacing = 38;
+    final int acSpacing = 30;
+    final int hourSpacing = 30;
+    final int middleRow = 52;
     
     @Override
     public void handle(ActionEvent action_event){
         //LOAD BUTTON
         if(action_event.getSource().equals(AIManager.btn_load)){
+            //clearing
             ac_array.clear();
             results.getChildren().clear();
             sp.setVvalue(0);
             
+            //Loading
             try{
                 loadFile();
             }
@@ -68,10 +70,12 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             ac_text.setText("Aircraft Number");
             airport_text.setText("Airport Code");
             sp.setVvalue(0);
-            printAllAcs();
-            AIManager.search_count_txt.setText("Aircraft Found: "+ac_array.size());
             status_txt.setStyle("-fx-text-fill:#7FFF00");
             missingAirportTxt.setStyle("-fx-text-fill:#666699");
+            
+            printAllAcs();
+            AIManager.search_count_txt.setText("Aircraft Found: "+ac_array.size());
+
         }
         
         //SEARCH BUTTON
@@ -82,11 +86,13 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             status_txt.setStyle("-fx-text-fill:#7FFF00");
             missingAirportTxt.setStyle("-fx-text-fill:#666699");
             
+            //Variables
             int num_results = 0;
             String flight_num;
             String ac_num;
             String airport_code;
             
+            //Setting search variables
             if (flight_text.getText().equals("Flight Number")){
                 flight_num = "*";
             }
@@ -105,22 +111,22 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 airport_code = "*";
             }
             else{
-                airport_code = airport_text.getText();
+                airport_code = airport_text.getText().toUpperCase();
             }
-            
             
             for(int i=0; i<ac_array.size(); i++){
                 ac_array.get(i).setHasLongGround(false);
             }
             
+            
             //Drawing Vertical Lines and Hour labels
             for(int i=0; i<=48; i++){
                 //Vertical Lines
                 Line v_lines = new Line();
-                v_lines.setStartX(30*i+130);
+                v_lines.setStartX(hourSpacing*i+leftMargin);
                 v_lines.setStartY(0);
-                v_lines.setEndX(30*i+130);
-                v_lines.setEndY(ac_array.size()*30+36);
+                v_lines.setEndX(hourSpacing*i+leftMargin);
+                v_lines.setEndY(ac_array.size()*hourSpacing+topMargin);
                 v_lines.setStroke(Color.LIGHTSLATEGREY);
 
                 //ADDING TO PANE
@@ -161,15 +167,15 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     //HLINES (TO DO: CREATE METHOD)
                     Line h_lines = new Line();
                     h_lines.setStartX(0);
-                    h_lines.setStartY(((num_results-1)*30)+36);
+                    h_lines.setStartY(((num_results-1)*hourSpacing)+topMargin);
                     h_lines.setEndX(2000);
-                    h_lines.setEndY((num_results-1)*30+36);
+                    h_lines.setEndY((num_results-1)*hourSpacing+topMargin);
                     h_lines.setStroke(Color.LIGHTSLATEGREY);
 
                     //AIRCRAFT LABELS
                     Label ac_label = new Label((num_results-1)+1+" AC#"+String.valueOf(ac_array.get(j).getAcnum())+" "+ac_array.get(j).getFlightnum());
                     ac_label.setLayoutX(0);
-                    ac_label.setLayoutY((num_results-1)*30+40);
+                    ac_label.setLayoutY((num_results-1)*hourSpacing+acLabelSpacing);
                     ac_label.setTextFill(Color.BLACK);
                     
                     //ADDING TO RESULT PANE
@@ -201,10 +207,15 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                                 Line conn_line = new Line();
                                 
                                 if(i==0){
+                                    if(j==0){
+                                        System.out.println(ac_array.get(j).getFlightnum()+" "+ac_array.get(j).getFlight(i).getDepTimeInGui());
+                                    }
+                                    double endX = ac_array.get(j).getFlight(i).getDepTimeInGui() + 750;
+                                    
                                     conn_line.setStartX(ac_array.get(j).getFlight(ac_array.get(j).flight_array.size()-1).getArrTimeInGui()+31.5);
-                                    conn_line.setStartY((num_results-1)*30+52);
-                                    conn_line.setEndX(ac_array.get(j).getFlight(ac_array.get(j).flight_array.size()-1).getArrTimeInGui()+101.5);
-                                    conn_line.setEndY((num_results-1)*30+52);
+                                    conn_line.setStartY((num_results-1)*acSpacing+middleRow);
+                                    conn_line.setEndX(endX);
+                                    conn_line.setEndY((num_results-1)*acSpacing+middleRow);
                                     conn_line.setStroke(Color.RED);
                                     conn_line.setStrokeWidth(2.5);
                                     
@@ -213,9 +224,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                                 else{
                                     //Drawing Connection Line
                                     conn_line.setStartX(ac_array.get(j).getFlight(i-1).getArrTimeInGui()+31.5);
-                                    conn_line.setStartY((num_results-1)*30+52);
+                                    conn_line.setStartY((num_results-1)*acSpacing+52);
                                     conn_line.setEndX(ac_array.get(j).getFlight(i).getDepTimeInGui()+30);
-                                    conn_line.setEndY((num_results-1)*30+52);
+                                    conn_line.setEndY((num_results-1)*acSpacing+52);
                                     conn_line.setStroke(Color.RED);
                                     conn_line.setStrokeWidth(2.5);
 
@@ -348,9 +359,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             //HLINES
             Line h_lines = new Line();
             h_lines.setStartX(0);
-            h_lines.setStartY((i*ac_line_spacing)+top_margin);
+            h_lines.setStartY((i*acSpacing)+topMargin);
             h_lines.setEndX(2000);
-            h_lines.setEndY(i*ac_line_spacing+top_margin);
+            h_lines.setEndY(i*acSpacing+topMargin);
             h_lines.setStroke(Color.LIGHTSLATEGREY);
             //Caused performance issues:
             //r.getStrokeDashArray().addAll(2d);
@@ -358,7 +369,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             //AIRCRAFT LABELS
             Label ac_label = new Label(i+1+" AC#"+String.valueOf(ac_array.get(i).getAcnum())+" "+ac_array.get(i).getFlightnum());
             ac_label.setLayoutX(0);
-            ac_label.setLayoutY(i*ac_line_spacing+ac_label_spacing);
+            ac_label.setLayoutY(i*acSpacing+acLabelSpacing);
             ac_label.setTextFill(Color.BLACK);
 
             //ADDING TO RESULT PANE
@@ -373,7 +384,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             v_lines.setStartX(30*i+130);
             v_lines.setStartY(0);
             v_lines.setEndX(30*i+130);
-            v_lines.setEndY(ac_array.size()*hour_spacing+top_margin);
+            v_lines.setEndY(ac_array.size()*hourSpacing+topMargin);
             v_lines.setStroke(Color.LIGHTSLATEGREY);
 
             //ADDING TO PANE
@@ -474,8 +485,8 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
 
             
 
-            sp.vvalueProperty().addListener( (observable, oldValue, newValue) -> {
-                double yTranslate = ((newValue.doubleValue() * (ac_array.size()*hour_spacing+top_margin)) -
+            sp.vvalueProperty().addListener((observable, oldValue, newValue) -> {
+                double yTranslate = ((newValue.doubleValue() * (ac_array.size()*hourSpacing+topMargin)) -
                                      (newValue.doubleValue() * (sp.getHeight()-18)));
                 hours_label.translateYProperty().setValue(yTranslate);
                 hours_rec.translateYProperty().setValue(yTranslate);
