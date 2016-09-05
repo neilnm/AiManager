@@ -49,6 +49,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             ac_array.clear();
             results.getChildren().clear();
             sp.setVvalue(0);
+            AIManager.load_text.setText("");
             
             //Loading
             try{
@@ -93,20 +94,19 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             String airport_code;
             
             //Setting search variables
-            if (flight_text.getText().equals("Flight Number")){
-                flight_num = "*";
-            }
-            else{
-                flight_num = flight_text.getText();
-            }
-            
+
             if (ac_text.getText().equals("Aircraft Number")){
                 ac_num = "*";
             }
             else{
-                ac_num = ac_text.getText();
+                ac_num = ac_text.getText().toUpperCase();
             }
-            
+            if (flight_text.getText().equals("Flight Number")){
+                flight_num = "*";
+            }
+            else{
+                flight_num = flight_text.getText().toUpperCase();
+            }
             if (airport_text.getText().equals("Airport Code")){
                 airport_code = "*";
             }
@@ -207,11 +207,10 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                                 Line conn_line = new Line();
                                 
                                 if(i==0){
-                                    if(j==0){
-                                        System.out.println(ac_array.get(j).getFlightnum()+" "+ac_array.get(j).getFlight(i).getDepTimeInGui());
-                                    }
+                                    //720 is 24 hours in GUI (24*30)
                                     double endX = ac_array.get(j).getFlight(i).getDepTimeInGui() + 720;
                                     
+                                    //1.5 is extra spacing since stroke width is 2.5
                                     conn_line.setStartX(ac_array.get(j).getFlight(ac_array.get(j).flight_array.size()-1).getArrTimeInGui()+1.5);
                                     conn_line.setStartY((num_results-1)*acSpacing+middleRow);
                                     conn_line.setEndX(endX);
@@ -224,9 +223,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                                 else{
                                     //Drawing Connection Line
                                     conn_line.setStartX(ac_array.get(j).getFlight(i-1).getArrTimeInGui()+1.5);
-                                    conn_line.setStartY((num_results-1)*acSpacing+52);
+                                    conn_line.setStartY((num_results-1)*acSpacing+middleRow);
                                     conn_line.setEndX(ac_array.get(j).getFlight(i).getDepTimeInGui());
-                                    conn_line.setEndY((num_results-1)*acSpacing+52);
+                                    conn_line.setEndY((num_results-1)*acSpacing+middleRow);
                                     conn_line.setStroke(Color.RED);
                                     conn_line.setStrokeWidth(2.5);
 
@@ -237,7 +236,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                         
                         //Drawing Aircrafts
                         //REC(X START, Y START, WIDTH, HEIGHT)
-                        Rectangle leg_rec = new Rectangle(dep_time_in_gui,(num_results-1)*30+44,duration_in_gui,15);
+                        Rectangle leg_rec = new Rectangle(dep_time_in_gui,(num_results-1)*acSpacing+44,duration_in_gui,15);
                         Tooltip stations = new Tooltip();
                         stations.setText(ac_array.get(j).getFlight(i).toString());
 //                        if (ac_array.get(j).getFlight(i).getDeptime() >= 2400){
@@ -381,9 +380,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
         for(int i=0; i<=48; i++){
             //Vertical Lines
             Line v_lines = new Line();
-            v_lines.setStartX(30*i+130);
+            v_lines.setStartX(hourSpacing*i+leftMargin);
             v_lines.setStartY(0);
-            v_lines.setEndX(30*i+130);
+            v_lines.setEndX(hourSpacing*i+leftMargin);
             v_lines.setEndY(ac_array.size()*hourSpacing+topMargin);
             v_lines.setStroke(Color.LIGHTSLATEGREY);
 
@@ -402,7 +401,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
 
                 //Drawing Aircrafts
                 //REC(X START, Y START, WIDTH, HEIGHT)
-                Rectangle leg_rec = new Rectangle(dep_time_in_gui,j*30+44,duration_in_gui,15);
+                Rectangle leg_rec = new Rectangle(dep_time_in_gui,j*acSpacing+44,duration_in_gui,15);
                 Tooltip stations = new Tooltip();
                 stations.setText(ac_array.get(j).getFlight(i).toString());
                 Font font = new Font("Verdana",20);
@@ -448,7 +447,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             if(i > 24){
                 hours_label.setText(String.valueOf(i-24));
             }
-            hours_label.setLayoutX((30*i)+127);
+            hours_label.setLayoutX((hourSpacing*i)+127);
             hours_label.setLayoutY(1);
             hours_label.setTextFill(Color.WHITE);
             
@@ -466,7 +465,7 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
             }
             
             Label local_hours_label = new Label();
-            local_hours_label.setLayoutX((30*i)+127);
+            local_hours_label.setLayoutX((hourSpacing*i)+127);
             local_hours_label.setLayoutY(19);
             local_hours_label.setTextFill(Color.LIGHTSKYBLUE);
             if(missingAirport){
