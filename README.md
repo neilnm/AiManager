@@ -3,6 +3,8 @@ AI Manager for FSX
 
 -Clean code
 
+-Add enter action for search
+
 -Add airport function
 
 -Add duration label
