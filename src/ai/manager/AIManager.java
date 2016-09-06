@@ -125,14 +125,17 @@ public class AIManager extends Application {
         airport_text.setText("Airport Code");
         airport_text.setAlignment(Pos.CENTER);
         airport_text.setOnMouseReleased(new ClickAction());
+        airport_text.setOnKeyPressed(new KeyAction());
         
         flight_text.setText("Flight Number");
         flight_text.setAlignment(Pos.CENTER);
         flight_text.setOnMouseReleased(new ClickAction());
-
+        flight_text.setOnKeyPressed(new KeyAction());
+        
         ac_text.setText("Aircraft Number");
         ac_text.setAlignment(Pos.CENTER);
         ac_text.setOnMouseReleased(new ClickAction());
+        ac_text.setOnKeyPressed(new KeyAction());
         
         down_text.setText("4");
         down_text.setAlignment(Pos.CENTER);
