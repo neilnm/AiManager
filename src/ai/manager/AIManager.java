@@ -34,27 +34,27 @@ import javafx.scene.paint.Color;
 public class AIManager extends Application {
     
     //Static Variables
-    static TextField load_text = new TextField();
-    static TextField down_text = new TextField();
-    static TextField flight_text = new TextField();
-    static TextField ac_text = new TextField();
-    static TextField airport_text = new TextField();
+    static TextField loadTxt = new TextField();
+    static TextField downTxt = new TextField();
+    static TextField flightTxt = new TextField();
+    static TextField acTxt = new TextField();
+    static TextField airportTxt = new TextField();
     
     static String filePathInput = new String();
 
     
-    static List <Aircraft> ac_array = new ArrayList<>();
-    static List <Aircraft> search_array = new ArrayList<>();
+    static List <Aircraft> acArray = new ArrayList<>();
+    static List <Aircraft> searchArray = new ArrayList<>();
     static ArrayList<String[]> localTimeCommaList = new ArrayList<>();
     
-    static Label ac_count_txt = new Label();
-    static Label search_count_txt = new Label();
-    static Label status_txt = new Label();
+    static Label acCountTxt = new Label();
+    static Label searchCountTxt = new Label();
+    static Label statusTxt = new Label();
     static Label missingAirportTxt = new Label();
     
-    static ToggleButton btn_load = new ToggleButton("");
-    static Button btn_reset = new Button("reset");
-    static Button btn_search = new Button("SEARCH");
+    static ToggleButton btnLoad = new ToggleButton("");
+    static Button btnReset = new Button("reset");
+    static Button btnSearch = new Button("SEARCH");
     
     static Pane results = new Pane();
     static ScrollPane sp = new ScrollPane();
@@ -65,7 +65,7 @@ public class AIManager extends Application {
     public void start(Stage primaryStage) throws FileNotFoundException {
         //***********GUI Setup**************//
         //images
-        Image img_load = new Image(getClass().getClassLoader().getResourceAsStream("Images/icon_load.png"));
+        Image imgLoad = new Image(getClass().getClassLoader().getResourceAsStream("Images/iconLoad.png"));
         Image air = new Image(getClass().getClassLoader().getResourceAsStream("Images/air.png"));
         
         //VBOX
@@ -85,69 +85,71 @@ public class AIManager extends Application {
         hbox2.setStyle("-fx-background-color:#2b2b3b;");
         hbox2.setAlignment(Pos.CENTER_LEFT);
         
-        VBox vbox_ac = new VBox();
-        vbox_ac.setAlignment(Pos.CENTER);
-        vbox_ac.setPadding(new Insets(0,0,16.5,0));
-        VBox vbox_flight = new VBox();
-        vbox_flight.setPadding(new Insets(0,0,16.5,0));
-        vbox_flight.setAlignment(Pos.CENTER);
-        VBox vbox_station = new VBox();
-        vbox_station.setPadding(new Insets(0,0,16.5,0));
-        vbox_station.setAlignment(Pos.CENTER);
-        VBox vbox_hours = new VBox();
-        vbox_hours.setPadding(new Insets(0,0,16.5,0));
-        vbox_hours.setAlignment(Pos.CENTER);
+        VBox vboxAc = new VBox();
+        vboxAc.setAlignment(Pos.CENTER);
+        vboxAc.setPadding(new Insets(0,0,16.5,0));
+        VBox vboxFlight = new VBox();
+        vboxFlight.setPadding(new Insets(0,0,16.5,0));
+        vboxFlight.setAlignment(Pos.CENTER);
+        VBox vboxStation = new VBox();
+        vboxStation.setPadding(new Insets(0,0,16.5,0));
+        vboxStation.setAlignment(Pos.CENTER);
+        VBox vboxHours = new VBox();
+        vboxHours.setPadding(new Insets(0,0,16.5,0));
+        vboxHours.setAlignment(Pos.CENTER);
         
         //Panes
-        BorderPane main_pane = new BorderPane();
+        BorderPane mainPane = new BorderPane();
         
         results.setMinSize(1800,1000);
         results.setStyle("-fx-background-color:#b0cce8;");
         
         //Buttons
-        btn_load.setGraphic(new ImageView(img_load));
-        btn_load.setStyle("-fx-background-color: transparent");
-        btn_load.setMinSize(52,52);
-        btn_load.setOnAction(new ButtonHandler());
+        btnLoad.setGraphic(new ImageView(imgLoad));
+        btnLoad.setStyle("-fx-background-color: transparent");
+        btnLoad.setMinSize(52,52);
+        btnLoad.setOnAction(new ButtonHandler());
         
-        btn_reset.setOnAction(new ButtonHandler());
+        btnReset.setOnAction(new ButtonHandler());
         
-        btn_search.setOnAction(new ButtonHandler());
+        btnSearch.setOnAction(new ButtonHandler());
         
-        Button btn_air = new Button();
-        btn_air.setStyle("-fx-background-color: transparent");
-        btn_air.setGraphic(new ImageView(air));
+        Button btnTikki = new Button();
+        btnTikki.setStyle("-fx-background-color: transparent");
+        btnTikki.setGraphic(new ImageView(air));
         
         //TXT Fields
-        load_text.setMinHeight(25);
-        load_text.setMinWidth(400);
+        loadTxt.setMinHeight(25);
+        loadTxt.setMinWidth(400);
         
-        airport_text.setText("Airport Code");
-        airport_text.setAlignment(Pos.CENTER);
-        airport_text.setOnMouseReleased(new ClickAction());
-        airport_text.setOnKeyPressed(new KeyAction());
+        airportTxt.setText("Airport Code");
+        airportTxt.setAlignment(Pos.CENTER);
+        airportTxt.setOnMouseReleased(new ClickAction());
+        airportTxt.setOnKeyPressed(new KeyAction());
         
-        flight_text.setText("Flight Number");
-        flight_text.setAlignment(Pos.CENTER);
-        flight_text.setOnMouseReleased(new ClickAction());
-        flight_text.setOnKeyPressed(new KeyAction());
+        flightTxt.setText("Flight Number");
+        flightTxt.setAlignment(Pos.CENTER);
+        flightTxt.setOnMouseReleased(new ClickAction());
+        flightTxt.setOnKeyPressed(new KeyAction());
         
-        ac_text.setText("Aircraft Number");
-        ac_text.setAlignment(Pos.CENTER);
-        ac_text.setOnMouseReleased(new ClickAction());
-        ac_text.setOnKeyPressed(new KeyAction());
+        acTxt.setText("Aircraft Number");
+        acTxt.setAlignment(Pos.CENTER);
+        acTxt.setOnMouseReleased(new ClickAction());
+        acTxt.setOnKeyPressed(new KeyAction());
         
-        down_text.setText("4");
-        down_text.setAlignment(Pos.CENTER);
-        down_text.setMaxWidth(30);
+        downTxt.setText("4");
+        downTxt.setAlignment(Pos.CENTER);
+        downTxt.setMaxWidth(30);
+        downTxt.setOnMouseReleased(new ClickAction());
+        downTxt.setOnKeyPressed(new KeyAction());
         
-        ac_count_txt.setText("Aircraft Loaded: 0");
-        ac_count_txt.setStyle("-fx-text-fill:#F0FFFF");
-        ac_count_txt.setPadding(new Insets(0,0,0,50));
+        acCountTxt.setText("Aircraft Loaded: 0");
+        acCountTxt.setStyle("-fx-text-fill:#F0FFFF");
+        acCountTxt.setPadding(new Insets(0,0,0,50));
         
-        search_count_txt.setText("Aircraft Found: 0");
-        search_count_txt.setStyle("-fx-text-fill:#F0FFFF");
-        search_count_txt.setPadding(new Insets(0,0,0,50));
+        searchCountTxt.setText("Aircraft Found: 0");
+        searchCountTxt.setStyle("-fx-text-fill:#F0FFFF");
+        searchCountTxt.setPadding(new Insets(0,0,0,50));
         
         missingAirportTxt.setText("Missing Airport");
         missingAirportTxt.setStyle("-fx-text-fill:#666699");
@@ -155,18 +157,18 @@ public class AIManager extends Application {
         
         //Labels
         
-        status_txt.setText("STATUS:");
-        status_txt.setStyle("-fx-text-fill:#7FFF00");
-        status_txt.setPadding(new Insets(0,0,0,32));
+        statusTxt.setText("STATUS:");
+        statusTxt.setStyle("-fx-text-fill:#7FFF00");
+        statusTxt.setPadding(new Insets(0,0,0,32));
         
-        Label ac_label = new Label("Aircraft Number");
-        Label flight_label = new Label("Flight Number");
-        Label station_label = new Label("Airport Code");
-        Label hours_label = new Label("Down Hours");
-        ac_label.setTextFill(Color.WHITE);
-        flight_label.setTextFill(Color.WHITE);
-        station_label.setTextFill(Color.WHITE);
-        hours_label.setTextFill(Color.WHITE);
+        Label acLabel = new Label("Aircraft Number");
+        Label flightLabel = new Label("Flight Number");
+        Label stationLabel = new Label("Airport Code");
+        Label hoursLabel = new Label("Down Hours");
+        acLabel.setTextFill(Color.WHITE);
+        flightLabel.setTextFill(Color.WHITE);
+        stationLabel.setTextFill(Color.WHITE);
+        hoursLabel.setTextFill(Color.WHITE);
         
         //Others
         Separator sep1 = new Separator();
@@ -175,12 +177,12 @@ public class AIManager extends Application {
         sep2.setOrientation(Orientation.VERTICAL);
         
         //add to children
-        vbox_ac.getChildren().addAll(ac_label,ac_text);
-        vbox_flight.getChildren().addAll(flight_label,flight_text);
-        vbox_station.getChildren().addAll(station_label,airport_text);
-        vbox_hours.getChildren().addAll(hours_label,down_text);
-        hbox1.getChildren().addAll(btn_load,load_text,sep1,vbox_ac,vbox_flight,vbox_station,vbox_hours,sep2,btn_search,btn_reset,btn_air);
-        hbox2.getChildren().addAll(status_txt,ac_count_txt,search_count_txt,missingAirportTxt);
+        vboxAc.getChildren().addAll(acLabel,acTxt);
+        vboxFlight.getChildren().addAll(flightLabel,flightTxt);
+        vboxStation.getChildren().addAll(stationLabel,airportTxt);
+        vboxHours.getChildren().addAll(hoursLabel,downTxt);
+        hbox1.getChildren().addAll(btnLoad,loadTxt,sep1,vboxAc,vboxFlight,vboxStation,vboxHours,sep2,btnSearch,btnReset,btnTikki);
+        hbox2.getChildren().addAll(statusTxt,acCountTxt,searchCountTxt,missingAirportTxt);
         vbox1.getChildren().addAll(hbox1,hbox2);
         
         //Setting Scene
@@ -188,10 +190,10 @@ public class AIManager extends Application {
         sp.setContent(results);
         sp.setStyle("-fx-border-color: #003366;");
         
-        main_pane.setTop(vbox1);
-        main_pane.setCenter(sp);
+        mainPane.setTop(vbox1);
+        mainPane.setCenter(sp);
         
-        Scene scene = new Scene(main_pane,1450,800);
+        Scene scene = new Scene(mainPane,1450,800);
         
         primaryStage.setTitle("AI Manager by Neil Mancini");
         primaryStage.setScene(scene);

@@ -8,6 +8,7 @@ public class Flight{
     private final double dep_time;
     private final String arr_station;
     private final double arr_time;
+    private final int leftMargin = ButtonHandler.getMargin("LEFT_MARGIN");
     
     public Flight(String dep_station,double dep_time,
                   String arr_station,double arr_time){
@@ -89,13 +90,13 @@ public class Flight{
     public double getDepTimeInGui(){
         //Divided by 100 because 134 time is 1.34 hours * 30 (30 is spacing per hour) + 130 (130 is 100 for margin spacing and 30 for 1 hour spacing because starting at 00:00)
         //Returning a minimum of 130 
-        return getDepTimeRatio()/100*30+130;
+        return getDepTimeRatio()/100*30+leftMargin;
     }
     
     public double getArrTimeInGui(){
         //Divided by 100 because 134 time is 1.34 hours * 30 (30 is spacing per hour) + 130 (130 is 100 for margin spacing and 30 for 1 hour spacing because starting at 00:00)
         //Returning a minimum of 130 
-        return getArrTimeRatio()/100*30+130;
+        return getArrTimeRatio()/100*30+leftMargin;
     }
     
     //TO STRING
