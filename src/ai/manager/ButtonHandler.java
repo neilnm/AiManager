@@ -34,11 +34,11 @@ import static ai.manager.AIManager.statusTxt;
 public class ButtonHandler implements EventHandler<ActionEvent>{
     
     //Margin and Spacing Variables
-     static int TOP_MARGIN = 36;
-     static int LEFT_MARGIN = 130;
-     static int AC_SPACING = 30;
-     static int HOUR_SPACING = 30;
-     static int MIDDLE_ROW = 52;
+    static int TOP_MARGIN = 36;
+    static int LEFT_MARGIN = 130;
+    static int AC_SPACING = 30;
+    static int HOUR_SPACING = 30;
+    static int MIDDLE_ROW = 52;
     
     @Override
     public void handle(ActionEvent action_event){
@@ -83,13 +83,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
         }
     }
     
-    
-    //**************************************************************************************************\\
-    //***********************************************METHODS********************************************\\
-    //**************************************************************************************************\\
-    
+    //********METHODS**********\\
+
     //SEARCH
-    
     public static void Search(){
         //Clearing Arrays and Result Pane
         results.getChildren().clear();
@@ -126,23 +122,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
         for(int i=0; i<acArray.size(); i++){
             acArray.get(i).setHasLongGround(false);
         }
-
-/***********************METHOD********************************/
-        //Drawing Vertical Lines and Hour labels
-        for(int i=0; i<=48; i++){
-            //Vertical Lines
-            Line v_lines = new Line();
-            v_lines.setStartX(HOUR_SPACING*i+LEFT_MARGIN);
-            v_lines.setStartY(0);
-            v_lines.setEndX(HOUR_SPACING*i+LEFT_MARGIN);
-            v_lines.setEndY(acArray.size()*HOUR_SPACING+TOP_MARGIN);
-            v_lines.setStroke(Color.LIGHTSLATEGREY);
-
-            //ADDING TO PANE
-            results.getChildren().add(v_lines);
-        }
-/***********************METHOD********************************/
-
+        
+        drawVlines();
+        
         //Printing ACs matching search criteria to screen
         for(int j = 0; j < acArray.size(); j++){
 
@@ -173,27 +155,10 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 (acArray.get(j).getHasLongGround() && acArray.get(j).getFlightnum().contains(flight_num) && ac_num.equals("*")) ||
                 (acArray.get(j).getHasLongGround() && flight_num.equals("*") && ac_num.equals("*"))){
 
-                num_results++;
-
-/***********************CREATE METHOD********************************/                    
-                //HLINES (TO DO: CREATE METHOD)
-                Line h_lines = new Line();
-                h_lines.setStartX(0);
-                h_lines.setStartY(((num_results-1)*AC_SPACING)+TOP_MARGIN);
-                h_lines.setEndX(2000);
-                h_lines.setEndY((num_results-1)*AC_SPACING+TOP_MARGIN);
-                h_lines.setStroke(Color.LIGHTSLATEGREY);
-
-/***********************CREATE METHOD********************************/
-                //AIRCRAFT LABELS
-                Label ac_label = new Label((num_results-1)+1+" AC#"+String.valueOf(acArray.get(j).getAcnum())+" "+acArray.get(j).getFlightnum());
-                ac_label.setLayoutX(0);
-                ac_label.setLayoutY((num_results-1)*AC_SPACING+TOP_MARGIN);
-                ac_label.setTextFill(Color.BLACK);
-
-                //ADDING TO RESULT PANE
-                results.getChildren().add(h_lines);
-                results.getChildren().add(ac_label);
+                num_results++;            
+                
+                drawHlines(num_results-1);
+                drawAcLabel(num_results-1,j);
 
                 //Drawing Flights
                 for(int i = 0; i < acArray.get(j).flight_array.size(); i++){
@@ -258,9 +223,9 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     Rectangle leg_rec = new Rectangle(dep_time_in_gui,(num_results-1)*AC_SPACING+44,duration_in_gui,15);
                     Tooltip stations = new Tooltip();
                     stations.setText(acArray.get(j).getFlight(i).toString());
-                    
                     stations.setFont(font);
                     Tooltip.install(leg_rec, stations);
+                    
                     //Alternating Leg Colors
                     leg_rec.setFill(Color.BLUE);
                     if((j%2>0)){
@@ -268,16 +233,13 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                     }
 
                     //Adding to Rectangle Array and to results pane
-                    //AIManager.rec_array.add(leg_rec);
                     results.getChildren().addAll(leg_rec);
                 }
             }
         }
         printHoursHeader();
-        //Reloading ac count text
         AIManager.searchCountTxt.setText("Aircraft Found: "+num_results);
     }
-    
     
     //LoadFile and Create ac_array function
     public void loadFile() throws FileNotFoundException{
@@ -292,7 +254,6 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
         File selectedfile = fileChooser.showOpenDialog(null);
         AIManager.loadTxt.setText(selectedfile.getAbsolutePath());
         AIManager.filePathInput = AIManager.loadTxt.getText();
-        
         
         //Reading file
         reader = new Scanner(new File(AIManager.filePathInput));
@@ -317,7 +278,6 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                                            commalist.get(i)[1]);
 
                 int num_of_flights = commalist.get(i).length / 6;
-                //System.out.println(num_of_flights);
 
                 //Adding Flights to Aircraft (Dep Station, Dep Time, Arr Station, Arr Time)
                 try{
@@ -353,7 +313,6 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
         }
     }
     
-    
     //Print/Load all ac_array to screen Method:
     public void printAllAcs(){
         //Setting AC COUNT TEXT
@@ -362,46 +321,14 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
         
         //Drawing H lines and Printing Aircraft Labels
         for (int i=0; i < acArray.size(); i++) {
-            
-/***********************CREATE METHOD********************************/            
-            //HLINES
-            Line h_lines = new Line();
-            h_lines.setStartX(0);
-            h_lines.setStartY((i*AC_SPACING)+TOP_MARGIN);
-            h_lines.setEndX(2000);
-            h_lines.setEndY(i*AC_SPACING+TOP_MARGIN);
-            h_lines.setStroke(Color.LIGHTSLATEGREY);
-
-/***********************CREATE METHOD********************************/            
-            //AIRCRAFT LABELS
-            Label ac_label = new Label(i+1+" AC#"+String.valueOf(acArray.get(i).getAcnum())+" "+acArray.get(i).getFlightnum());
-            ac_label.setLayoutX(0);
-            ac_label.setLayoutY(i*AC_SPACING+TOP_MARGIN);
-            ac_label.setTextFill(Color.BLACK);
-
-            //ADDING TO RESULT PANE
-            results.getChildren().add(h_lines);
-            results.getChildren().add(ac_label);
+            drawHlines(i);
+            drawAcLabel(i,i);
         }
-
-        //Drawing Vertical Lines and Hour labels
-        for(int i=0; i<=48; i++){
-/***********************CREATE METHOD********************************/            
-            //Vertical Lines
-            Line v_lines = new Line();
-            v_lines.setStartX(HOUR_SPACING*i+LEFT_MARGIN);
-            v_lines.setStartY(0);
-            v_lines.setEndX(HOUR_SPACING*i+LEFT_MARGIN);
-            v_lines.setEndY(acArray.size()*HOUR_SPACING+TOP_MARGIN);
-            v_lines.setStroke(Color.LIGHTSLATEGREY);
-
-            //ADDING TO PANE
-            results.getChildren().add(v_lines);
-        }
-
-        //Drawing Flights + CONNECTION LINE + STATION LABELS
+        
+        drawVlines();
+                
+        //Drawing Flights + CONNECTION LINE
         for(int j = 0; j < acArray.size(); j++){
-
             for(int i = 0; i < acArray.get(j).flight_array.size(); i++){
                 //VARIABLES
                 double dep_time_in_gui = acArray.get(j).getFlight(i).getDepTimeInGui();
@@ -416,19 +343,17 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 Font font = new Font("Verdana",20);
                 stations.setFont(font);
                 Tooltip.install(leg_rec, stations);
+                
                 //Alternating Leg Colors
                 leg_rec.setFill(Color.BLUE);
                 if((j%2>0)){
                     leg_rec.setFill(Color.BLUEVIOLET);
                 }
-                //Adding to Rectangle Array and to results pane
-                //AIManager.rec_array.add(leg_rec);
                 results.getChildren().addAll(leg_rec);
             }
         }
         printHoursHeader();
     }
-    
     
     public static void printHoursHeader(){
         //Variables
@@ -439,38 +364,37 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
         boolean missingAirport = false;
         
         //Rectangle for Hours header
-        Rectangle hours_rec = new Rectangle(0,0,2000,17);
-        hours_rec.setFill(Color.web("#003366"));
-        hours_rec.setStroke(Color.web("#003366"));
+        Rectangle hoursRec = new Rectangle(0,0,2000,17);
+        hoursRec.setFill(Color.web("#003366"));
+        hoursRec.setStroke(Color.web("#003366"));
         
         Label utcTime = new Label("UTC TIME");
         utcTime.setTextFill(Color.WHITE);
         utcTime.setLayoutX(5);
         utcTime.setLayoutY(0);
         
-        Rectangle local_hours_rec = new Rectangle(0,18,2000,17);
-        local_hours_rec.setFill(Color.web("#000000"));
-        local_hours_rec.setStroke(Color.web("#000000"));
+        Rectangle localHoursRec = new Rectangle(0,18,2000,17);
+        localHoursRec.setFill(Color.web("#000000"));
+        localHoursRec.setStroke(Color.web("#000000"));
         
         Label localTime = new Label("LOCAL TIME");
         localTime.setTextFill(Color.WHITE);
         localTime.setLayoutX(5);
         localTime.setLayoutY(18);
         
-        results.getChildren().addAll(hours_rec,local_hours_rec,utcTime,localTime);
+        results.getChildren().addAll(hoursRec,localHoursRec,utcTime,localTime);
         
         //Loops for hours header
         for(int i=0; i<=48; i++){
             hoursInt = i;
             //Hour Labels
-            Label hours_label = new Label(String.valueOf(i));
+            Label hoursLabel = new Label(String.valueOf(i));
             if(i > 24){
-                hours_label.setText(String.valueOf(i-24));
+                hoursLabel.setText(String.valueOf(i-24));
             }
-            hours_label.setLayoutX((HOUR_SPACING*i)+LEFT_MARGIN-3);
-            hours_label.setLayoutY(1);
-            hours_label.setTextFill(Color.WHITE);
-            
+            hoursLabel.setLayoutX((HOUR_SPACING*i)+LEFT_MARGIN-3);
+            hoursLabel.setLayoutY(1);
+            hoursLabel.setTextFill(Color.WHITE);
             
             //Local Time Hour Labels
             if(!airport.equalsIgnoreCase("") && !airport.equalsIgnoreCase("*") && !airport.equalsIgnoreCase("Airport Code")){
@@ -484,12 +408,13 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 }
             }
             
-            Label local_hours_label = new Label();
-            local_hours_label.setLayoutX((HOUR_SPACING*i)+LEFT_MARGIN-3);
-            local_hours_label.setLayoutY(19);
-            local_hours_label.setTextFill(Color.LIGHTSKYBLUE);
+            Label localHoursLabel = new Label();
+            localHoursLabel.setLayoutX((HOUR_SPACING*i)+LEFT_MARGIN-3);
+            localHoursLabel.setLayoutY(19);
+            localHoursLabel.setTextFill(Color.LIGHTSKYBLUE);
+            
             if(missingAirport){
-                local_hours_label.setTextFill(Color.RED);
+                localHoursLabel.setTextFill(Color.RED);
             }
             hours = String.valueOf(hoursInt);
             if(hoursInt<0){
@@ -499,28 +424,64 @@ public class ButtonHandler implements EventHandler<ActionEvent>{
                 hours = String.valueOf((hoursInt)-24);
             }
 
-            local_hours_label.setText(hours);
+            localHoursLabel.setText(hours);
 
             sp.vvalueProperty().addListener((observable, oldValue, newValue) -> {
                 double yTranslate = ((newValue.doubleValue() * (acArray.size()*HOUR_SPACING+TOP_MARGIN)) -
                                      (newValue.doubleValue() * (sp.getHeight()-18)));
-                hours_label.translateYProperty().setValue(yTranslate);
-                hours_rec.translateYProperty().setValue(yTranslate);
+                hoursLabel.translateYProperty().setValue(yTranslate);
+                hoursRec.translateYProperty().setValue(yTranslate);
                 utcTime.translateYProperty().setValue(yTranslate);
                 localTime.translateYProperty().setValue(yTranslate);
-                local_hours_rec.translateYProperty().setValue(yTranslate);
-                local_hours_label.translateYProperty().setValue(yTranslate);
+                localHoursRec.translateYProperty().setValue(yTranslate);
+                localHoursLabel.translateYProperty().setValue(yTranslate);
                 utcTime.translateYProperty().setValue(yTranslate);
                 localTime.translateYProperty().setValue(yTranslate);
             });
-
-            //ADDING TO PANES
-            results.getChildren().addAll(hours_label,local_hours_label);
+            results.getChildren().addAll(hoursLabel,localHoursLabel);
         }
         if(missingAirport){
             statusTxt.setStyle("-fx-text-fill:#ff0000");
             missingAirportTxt.setStyle("-fx-text-fill:#ff0000");
         }
+    }
+    
+    public static void drawVlines(){
+        //Drawing Vertical Lines and Hour labels
+        for(int i=0; i<=48; i++){
+            //Vertical Lines
+            Line v_lines = new Line();
+            v_lines.setStartX(HOUR_SPACING*i+LEFT_MARGIN);
+            v_lines.setStartY(0);
+            v_lines.setEndX(HOUR_SPACING*i+LEFT_MARGIN);
+            v_lines.setEndY(acArray.size()*HOUR_SPACING+TOP_MARGIN);
+            v_lines.setStroke(Color.LIGHTSLATEGREY);
+
+            //ADDING TO PANE
+            results.getChildren().add(v_lines);
+        }
+    }
+    
+    //Not taking the total number of results as input but at which A/C it is at to know where to print the line. 
+    //Maybe need to readjust to keep same behavior as Vlines
+    public static void drawHlines(int position){
+        //HLINES (TO DO: CREATE METHOD)
+        Line h_lines = new Line();
+        h_lines.setStartX(0);
+        h_lines.setStartY(((position)*AC_SPACING)+TOP_MARGIN);
+        h_lines.setEndX(2000);
+        h_lines.setEndY((position)*AC_SPACING+TOP_MARGIN);
+        h_lines.setStroke(Color.LIGHTSLATEGREY);
+        results.getChildren().add(h_lines);
+    }
+    
+     public static void drawAcLabel(int position, int ac){
+            Label ac_label = new Label(position+1+" AC#"+String.valueOf(acArray.get(ac).getAcnum())+" "+acArray.get(ac).getFlightnum());
+            ac_label.setLayoutX(0);
+            ac_label.setLayoutY(position*AC_SPACING+TOP_MARGIN);
+            ac_label.setTextFill(Color.BLACK);
+
+            results.getChildren().add(ac_label);
     }
     
     public static int getMargin(String whichMargin){
