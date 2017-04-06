@@ -6,6 +6,8 @@ import static ai.manager.AIManager.downTxt;
 import static ai.manager.AIManager.flightTxt;
 import static ai.manager.AIManager.acTxt;
 import static ai.manager.AIManager.airportTxt;
+import static ai.manager.AIManager.toTxt;
+import static ai.manager.AIManager.fromTxt;
 
 public class ClickAction implements EventHandler<Event>{
 
@@ -25,6 +27,14 @@ public class ClickAction implements EventHandler<Event>{
         
         if(event.getSource().equals(downTxt)){
             downTxt.clear();
+        }
+        
+        if(event.getSource().equals(fromTxt)){
+            fromTxt.clear();
+        }
+        
+        if(event.getSource().equals(toTxt)){
+            toTxt.clear();
         }
         
     }

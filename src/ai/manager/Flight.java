@@ -1,6 +1,8 @@
 
 package ai.manager;
 
+import static ai.manager.AIManager.localTimeCommaList;
+
 public class Flight{
     
     //Variables
@@ -9,6 +11,7 @@ public class Flight{
     private final String arr_station;
     private final double arr_time;
     private final int leftMargin = ButtonHandler.getMargin("LEFT_MARGIN");
+    private boolean has_in_between = false;
     
     public Flight(String dep_station,double dep_time,
                   String arr_station,double arr_time){
@@ -42,6 +45,14 @@ public class Flight{
         }
         return getArrtime() - getDeptime();
     }
+    
+    public void setHasInBetween(boolean has_in_between){
+        this.has_in_between = has_in_between;
+     }
+    
+    public boolean getHasInBetween(){
+        return has_in_between;
+     }
     
     //Method to return minutes in % ratio. Example: 30 minutes = 50; 45 minutes = 75.
     public double getDepTimeRatio(){
@@ -103,11 +114,41 @@ public class Flight{
     @Override
     public String toString(){
         double dep_time_check = dep_time;
+        double depDifference = 0;
+        double arrDifference = 0;
+        
         if(dep_time_check > 2359){
             dep_time_check = dep_time_check - 2400;
         }
+        
+        for(int k=0; k < localTimeCommaList.size()-1; k++){
+            if(dep_station.equalsIgnoreCase(localTimeCommaList.get(k)[0])){
+                depDifference = Double.parseDouble(localTimeCommaList.get(k)[1])*100;
+            }
+        }
+        
+        for(int k=0; k < localTimeCommaList.size()-1; k++){
+            if(arr_station.equalsIgnoreCase(localTimeCommaList.get(k)[0])){
+                arrDifference = Double.parseDouble(localTimeCommaList.get(k)[1])*100;
+            }
+        }
+        
+        double localDepTime = dep_time_check + depDifference;
+        double localArrTime = arr_time + arrDifference;
+        
+        if(localDepTime<0){
+            localDepTime=localDepTime+2400;
+        }
+        
+        if(localArrTime<0){
+            localArrTime=localArrTime+2400;
+        }
+        
         String dep_time_S = String.valueOf(dep_time_check).replace(".0","");
         String arr_time_S = String.valueOf(arr_time).replace(".0","");
+        
+        String localDepTimeS = String.valueOf(localDepTime).replace(".0","");
+        String localArrtimeS = String.valueOf(localArrTime).replace(".0","");
         
         if(dep_time_S.length() < 2){
             dep_time_S = "000"+dep_time_S;
@@ -132,13 +173,45 @@ public class Flight{
         if(arr_time_S.length() < 4){
             arr_time_S = "0"+arr_time_S;
         }
+        
+        //Local
+        
+        if(localDepTimeS.length() < 2){
+            localDepTimeS = "000"+localDepTimeS;
+        }
+        
+        if(localArrtimeS.length() < 2){
+            localArrtimeS = "000"+localArrtimeS;
+        }
+        
+        if(localDepTimeS.length() < 3){
+            localDepTimeS = "00"+localDepTimeS;
+        }
+        
+        if(localArrtimeS.length() < 3){
+            localArrtimeS = "00"+localArrtimeS;
+        }
+        
+        if(localDepTimeS.length() < 4){
+            localDepTimeS = "0"+localDepTimeS;
+        }
+        
+        if(localArrtimeS.length() < 4){
+            localArrtimeS = "0"+localArrtimeS;
+        }
 
         
         dep_time_S = dep_time_S.substring(0, 2) + ":" +dep_time_S.subSequence(2, 4);
         arr_time_S = arr_time_S.substring(0, 2) + ":" +arr_time_S.subSequence(2, 4);
         
+        localDepTimeS = localDepTimeS.substring(0, 2) + ":" +localDepTimeS.subSequence(2, 4);
+        localArrtimeS = localArrtimeS.substring(0, 2) + ":" +localArrtimeS.subSequence(2, 4);
+        
         String Flight_S = dep_station + " - " + arr_station + "\n" +
-                          dep_time_S + " - " + arr_time_S;
+                          "UTC \n" +
+                          dep_time_S + " - " + arr_time_S + "\n" +
+                          "Local \n" +
+                          localDepTimeS + " - " + localArrtimeS + "\n";
         return Flight_S;
     }
     

@@ -19,7 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -34,11 +34,13 @@ import javafx.scene.paint.Color;
 public class AIManager extends Application {
     
     //Static Variables
-    static TextField loadTxt = new TextField();
+    TextField loadTxt = new TextField();
     static TextField downTxt = new TextField();
     static TextField flightTxt = new TextField();
     static TextField acTxt = new TextField();
     static TextField airportTxt = new TextField();
+    static TextField fromTxt = new TextField();
+    static TextField toTxt = new TextField();
     
     static String filePathInput = new String();
 
@@ -89,10 +91,10 @@ public class AIManager extends Application {
         vboxAc.setAlignment(Pos.CENTER);
         vboxAc.setPadding(new Insets(0,0,16.5,0));
         VBox vboxFlight = new VBox();
-        vboxFlight.setPadding(new Insets(0,0,16.5,0));
+        vboxFlight.setPadding(new Insets(0,0,30,0));
         vboxFlight.setAlignment(Pos.CENTER);
         VBox vboxStation = new VBox();
-        vboxStation.setPadding(new Insets(0,0,16.5,0));
+        vboxStation.setPadding(new Insets(0,0,30,0));
         vboxStation.setAlignment(Pos.CENTER);
         VBox vboxHours = new VBox();
         vboxHours.setPadding(new Insets(0,0,16.5,0));
@@ -108,7 +110,7 @@ public class AIManager extends Application {
         btnLoad.setGraphic(new ImageView(imgLoad));
         btnLoad.setStyle("-fx-background-color: transparent");
         btnLoad.setMinSize(52,52);
-        btnLoad.setOnAction(new ButtonHandler());
+        btnLoad.setOnAction(new ButtonHandler(loadTxt));
         
         btnReset.setOnAction(new ButtonHandler());
         
@@ -126,6 +128,18 @@ public class AIManager extends Application {
         airportTxt.setAlignment(Pos.CENTER);
         airportTxt.setOnMouseReleased(new ClickAction());
         airportTxt.setOnKeyPressed(new KeyAction());
+        
+        fromTxt.setText("From");
+        fromTxt.setAlignment(Pos.CENTER);
+        fromTxt.setTranslateY(20);
+        fromTxt.setOnMouseReleased(new ClickAction());
+        fromTxt.setOnKeyPressed(new KeyAction());
+        
+        toTxt.setText("To");
+        toTxt.setAlignment(Pos.CENTER);
+        toTxt.setOnMouseReleased(new ClickAction());
+        toTxt.setOnKeyPressed(new KeyAction());
+        toTxt.setTranslateY(20);
         
         flightTxt.setText("Flight Number");
         flightTxt.setAlignment(Pos.CENTER);
@@ -178,8 +192,8 @@ public class AIManager extends Application {
         
         //add to children
         vboxAc.getChildren().addAll(acLabel,acTxt);
-        vboxFlight.getChildren().addAll(flightLabel,flightTxt);
-        vboxStation.getChildren().addAll(stationLabel,airportTxt);
+        vboxFlight.getChildren().addAll(flightLabel,flightTxt,fromTxt);
+        vboxStation.getChildren().addAll(stationLabel,airportTxt,toTxt);
         vboxHours.getChildren().addAll(hoursLabel,downTxt);
         hbox1.getChildren().addAll(btnLoad,loadTxt,sep1,vboxAc,vboxFlight,vboxStation,vboxHours,sep2,btnSearch,btnReset,btnTikki);
         hbox2.getChildren().addAll(statusTxt,acCountTxt,searchCountTxt,missingAirportTxt);
